@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="151a542b-8a0f-4e7f-ae18-6d2f7d10a785" name="Default Changelist" comment="" />
+    <list default="true" id="151a542b-8a0f-4e7f-ae18-6d2f7d10a785" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Flask Main" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1eRCtJRHFCyZi3QHcn6cm0NY7Qq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -22,11 +47,40 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.spider">
+    <configuration name="spider" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FARSystem" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spider.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="FARSystem" type="Python.FlaskServer">
       <module name="FARSystem" />
       <option name="target" value="$PROJECT_DIR$/app.py" />
@@ -42,6 +96,11 @@
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.spider" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -55,6 +114,9 @@
       <updated>1594275231578</updated>
       <workItem from="1594275264271" duration="526000" />
       <workItem from="1594276162240" duration="704000" />
+      <workItem from="1594279792284" duration="4067000" />
+      <workItem from="1594286335812" duration="896000" />
+      <workItem from="1594293954872" duration="6128000" />
     </task>
     <servers />
   </component>
@@ -70,5 +132,33 @@
       <screen x="0" y="30" width="1536" height="834" />
     </state>
     <state x="548" y="203" key="FileChooserDialogImpl/0.30.1536.834@0.30.1536.834" timestamp="1594275557748" />
+    <state width="1493" height="139" key="GridCell.Tab.0.bottom" timestamp="1594300010332">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state width="1493" height="139" key="GridCell.Tab.0.bottom/0.30.1536.834@0.30.1536.834" timestamp="1594300010332" />
+    <state width="1493" height="139" key="GridCell.Tab.0.center" timestamp="1594300010332">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state width="1493" height="139" key="GridCell.Tab.0.center/0.30.1536.834@0.30.1536.834" timestamp="1594300010332" />
+    <state width="1493" height="139" key="GridCell.Tab.0.left" timestamp="1594300010331">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state width="1493" height="139" key="GridCell.Tab.0.left/0.30.1536.834@0.30.1536.834" timestamp="1594300010331" />
+    <state width="1493" height="139" key="GridCell.Tab.0.right" timestamp="1594300010332">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state width="1493" height="139" key="GridCell.Tab.0.right/0.30.1536.834@0.30.1536.834" timestamp="1594300010332" />
+    <state x="449" y="272" key="com.intellij.ide.util.TipDialog" timestamp="1594293997385">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state x="449" y="272" key="com.intellij.ide.util.TipDialog/0.30.1536.834@0.30.1536.834" timestamp="1594293997385" />
+    <state x="431" y="186" width="672" height="678" key="search.everywhere.popup" timestamp="1594298195828">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state x="431" y="186" width="672" height="678" key="search.everywhere.popup/0.30.1536.834@0.30.1536.834" timestamp="1594298195828" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/FARSystem$FARSystem.coverage" NAME="FARSystem Coverage Results" MODIFIED="1594279919944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/FARSystem$spider.coverage" NAME="spider Coverage Results" MODIFIED="1594299981779" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
