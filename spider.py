@@ -207,6 +207,59 @@ class Spider:
                 traceback.print_exc()
                 self.db.rollback()
 
+    def get_actor_films_address(self):
+        # headers信息设置过多会导致乱码，所以简化headers
+        headers = {
+            'Referer': 'https://movie.douban.com/celebrity/1048026/movies?start=10&format=pic&sortby=time&role=A1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
+        }
+        # 构造演员参演的电影的第一页链接，获取电影总的数目
+        url_first_page = 'https://movie.douban.com/celebrity/{}/movies?start=0&format=pic&sortby=time&'.format(self.actor_id)
+        try:
+            response = requests.get(url_first_page, headers=headers)
+            if response.status_code == 200:
+                total_film = BeautifulSoup(response.text, 'html.parser').select('#content h1')[0].string
+                num = re.findall(r"[（](.*?)[）]", total_film)
+                # 向上取整
+                total_page = math.ceil(int(num[0]) / 10)
+                # 分别获取每一页的电影详细信息链接
+                film_address_list = []
+                for page in range(total_page):
+                    try:
+                        # 构造链接
+                        url = 'https://movie.douban.com/celebrity/{}/movies?start={}&format=pic&sortby=time&'.format(
+                            self.actor_id, 10 * page)
+                        response = requests.get(url_first_page, headers=headers)
+                        if response.status_code == 200:
+                            soup = BeautifulSoup(response.text, 'html.parser')
+                            # 获取该页10个电影的链接
+                            for href in soup.select('.nbg'):
+                                film_address_list.append(href['href'])
+                    except RequestException as e:
+                        print("获取电影信息出错：" + str(e))
+                return film_address_list
+        except RequestException as e:
+            print("获取电影信息出错：" + str(e))
+
+    def parse_film_info(self, film_address_list):
+        # headers信息设置过多会导致乱码，所以简化headers
+        headers = {
+            'Referer': 'https://movie.douban.com/celebrity/1048026/movies?start=10&format=pic&sortby=time&role=A1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
+        }
+        for address in film_address_list:
+            try:
+                response = requests.get(address, headers=headers)
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    
+            except RequestException as e:
+                print("获取电影信息出错：" + str(e))
+        return
+
+    def save_film_info(self, film_list):
+        return
+
 
     def run_task(self):
         # 获取演员主页链接
@@ -216,10 +269,16 @@ class Spider:
         # # 存储演员基本信息到数据库
         # self.save_actor_info(actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace,
         #                 actor_career)
-        # 获取演员获奖信息
-        award_list = self.parse_actor_awards()
-        # 保存演员获奖信息到数据库
-        self.save_actor_awards(award_list)
+        # # 获取演员获奖信息
+        # award_list = self.parse_actor_awards()
+        # # 保存演员获奖信息到数据库
+        # self.save_actor_awards(award_list)
+        # 获取演员参演的电影信息
+        film_address_list = self.get_actor_films_address()
+        print(film_address_list)
+        # film_info_list = self.parse_film_info(film_address_list)
+        # # 保存演员获奖信息到数据库
+        # self.save_film_info(film_info_list)
         self.db.close()
 
 
