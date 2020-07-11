@@ -2,6 +2,9 @@
 An analyzer and recommender for films and actors.
 
 # 项目日志
+## 2020-07-11
+1.完成电影信息解析的代码，并保存到数据库
+
 ## 2020-07-10
 1.完善演员基本信息解析的代码
 

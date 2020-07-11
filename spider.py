@@ -194,9 +194,12 @@ class Spider:
         """
         for award in award_list:
             if award['award_film'] != None:  # 获奖存在电影信息
-                sql = "insert into awards(actor_id, award_year, award_ceremony, award_name, award_film) values(%s,'%s','%s','%s','%s')"%(self.actor_id,award['award_year'],award['award_ceremony'],award['award_name'],award['award_film'])
+                sql = "insert into awards(actor_id, award_year, award_ceremony, award_name, award_film) values(%s,'%s','%s','%s','%s')" % (
+                    self.actor_id, award['award_year'], award['award_ceremony'], award['award_name'],
+                    award['award_film'])
             else:  # 获奖不存在电影信息
-                sql = "insert into awards(actor_id, award_year, award_ceremony, award_name) values(%s,'%s','%s','%s')"%(self.actor_id,award['award_year'],award['award_ceremony'],award['award_name'])
+                sql = "insert into awards(actor_id, award_year, award_ceremony, award_name) values(%s,'%s','%s','%s')" % (
+                    self.actor_id, award['award_year'], award['award_ceremony'], award['award_name'])
             try:
                 # 执行sql语句
                 self.cursor.execute(sql)
@@ -214,7 +217,8 @@ class Spider:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
         }
         # 构造演员参演的电影的第一页链接，获取电影总的数目
-        url_first_page = 'https://movie.douban.com/celebrity/{}/movies?start=0&format=pic&sortby=time&'.format(self.actor_id)
+        url_first_page = 'https://movie.douban.com/celebrity/{}/movies?start=0&format=pic&sortby=time&'.format(
+            self.actor_id)
         try:
             response = requests.get(url_first_page, headers=headers)
             if response.status_code == 200:
@@ -225,11 +229,12 @@ class Spider:
                 # 分别获取每一页的电影详细信息链接
                 film_address_list = []
                 for page in range(total_page):
+                    print("正在获取{}的电影链接,第{}页".format(self.actor, page + 1))
                     try:
                         # 构造链接
                         url = 'https://movie.douban.com/celebrity/{}/movies?start={}&format=pic&sortby=time&'.format(
                             self.actor_id, 10 * page)
-                        response = requests.get(url_first_page, headers=headers)
+                        response = requests.get(url, headers=headers)
                         if response.status_code == 200:
                             soup = BeautifulSoup(response.text, 'html.parser')
                             # 获取该页10个电影的链接
@@ -242,23 +247,114 @@ class Spider:
             print("获取电影信息出错：" + str(e))
 
     def parse_film_info(self, film_address_list):
+        """
+        解析电影基本信息
+        :param film_address_list: 电影信息界面的链接列表
+        :return: film_info_list 电影信息解析结果
+        """
         # headers信息设置过多会导致乱码，所以简化headers
         headers = {
             'Referer': 'https://movie.douban.com/celebrity/1048026/movies?start=10&format=pic&sortby=time&role=A1',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
         }
+        # 电影信息列表
+        film_info_list = []
         for address in film_address_list:
             try:
                 response = requests.get(address, headers=headers)
                 if response.status_code == 200:
                     soup = BeautifulSoup(response.text, 'html.parser')
-                    
+                    # 电影信息字典
+                    film_info_dic = {}
+                    # 电影id
+                    film_id = re.findall(".*subject/(.*)/", address)[0]
+                    film_info_dic['film_id'] = film_id
+                    print('电影id：{}'.format(film_id))
+                    # 主演名单
+                    film_protagonist = ''
+                    for actor in soup.select('.actor .attrs a'):
+                        film_protagonist += actor.get_text() + " "
+                    film_info_dic['film_protagonist'] = film_protagonist
+                    print('主演名单：{}'.format(film_protagonist))
+                    # 当前爬取的演员是主演，且该电影的评分存在才进行信息解析
+                    if self.actor in film_protagonist and soup.select('strong[property="v:average"]')[0].string != None:
+                        # 电影名称
+                        film_name = soup.select('#content h1 span')[0].string
+                        film_info_dic['film_name'] = film_name
+                        print('电影名称：{}'.format(film_name))
+                        # 电影出品年份
+                        film_year = re.findall(r'\d+', soup.select('#content h1 span')[1].string)[0]
+                        film_info_dic['film_year'] = film_year
+                        print('电影出品年份：{}'.format(film_year))
+                        # 电影图片
+                        film_img = soup.select('.nbgnbg img')[0]['src']
+                        film_info_dic['film_img'] = film_img
+                        print('电影图片：{}'.format(film_img))
+                        # 电影类型
+                        film_type = ''
+                        for type in soup.select('span[property="v:genre"]'):
+                            film_type += type.get_text() + " "
+                        film_info_dic['film_type'] = film_type
+                        print('电影类型：{}'.format(film_type))
+                        # 电影地区
+                        if (soup.select('#info .pl')[3].string in "制片国家/地区:"):
+                            film_region = soup.select('#info .pl')[3].next_element.next_element.strip()
+                        else:
+                            film_region = soup.select('#info .pl')[4].next_element.next_element.strip()
+                        film_info_dic['film_region'] = film_region
+                        print('电影地区：{}'.format(film_region))
+                        # 电影评分
+                        film_score = soup.find_all('strong', property="v:average")[0].string
+                        film_info_dic['film_score'] = film_score
+                        print('电影评分：{}'.format(film_score))
+                        # 电影评分人数
+                        film_comments_sum = soup.find_all('span', property="v:votes")[0].string
+                        film_info_dic['film_comments_sum'] = film_comments_sum
+                        print('电影评分人数：{}'.format(film_comments_sum))
+                        # 定位到电影星级评论的div
+                        soup_star_div = soup.find('div',class_='ratings-on-weight')
+                        # 五星率
+                        film_star_ratio_five = soup_star_div.find_all('div')[0].find(class_='rating_per').string
+                        film_info_dic['film_star_ratio_five'] = film_star_ratio_five
+                        print('五星率：{}'.format(film_star_ratio_five))
+                        # 四星率
+                        film_star_ratio_four = soup_star_div.find_all('div')[2].find(class_='rating_per').string
+                        film_info_dic['film_star_ratio_four'] = film_star_ratio_four
+                        print('四星率：{}'.format(film_star_ratio_four))
+                        # 三星率
+                        film_star_ratio_three = soup_star_div.find_all('div')[4].find(class_='rating_per').string
+                        film_info_dic['film_star_ratio_three'] = film_star_ratio_three
+                        print('三星率：{}'.format(film_star_ratio_three))
+                        # 两星率
+                        film_star_ratio_two = soup_star_div.find_all('div')[6].find(class_='rating_per').string
+                        film_info_dic['film_star_ratio_two'] = film_star_ratio_two
+                        print('两星率：{}'.format(film_star_ratio_two))
+                        # 一星率
+                        film_star_ratio_one = soup_star_div.find_all('div')[8].find(class_='rating_per').string
+                        film_info_dic['film_star_ratio_one'] = film_star_ratio_one
+                        print('一星率：{}'.format(film_star_ratio_one))
+                        film_info_list.append(film_info_dic)
+                    else:
+                        print("该电影暂无评分或者当前演员不是主演")
             except RequestException as e:
                 print("获取电影信息出错：" + str(e))
-        return
+            except IndexError:
+                pass
+        return film_info_list
 
-    def save_film_info(self, film_list):
-        return
+    def save_film_info(self, film_info_list):
+        for film in film_info_list:
+            sql = "insert into films(actor_id, film_id, film_name, film_year, film_img, film_protagonist, film_type, film_region, film_score, film_comments_sum, film_star_ratio_five, film_star_ratio_four, film_star_ratio_three, film_star_ratio_two, film_star_ratio_one) values(%s,%s,'%s','%s','%s','%s','%s','%s',%s,%s,'%s','%s','%s','%s','%s')" % (
+                self.actor_id, film['film_id'], film['film_name'], film['film_year'], film['film_img'], film['film_protagonist'], film['film_type'], film['film_region'], film['film_score'], film['film_comments_sum'], film['film_star_ratio_five'], film['film_star_ratio_four'], film['film_star_ratio_three'], film['film_star_ratio_two'], film['film_star_ratio_one'])
+            try:
+                # 执行sql语句
+                self.cursor.execute(sql)
+                # 提交到数据库执行
+                self.db.commit()
+            except:
+                # 如果发生错误则回滚
+                traceback.print_exc()
+                self.db.rollback()
 
 
     def run_task(self):
@@ -276,17 +372,17 @@ class Spider:
         # 获取演员参演的电影信息
         film_address_list = self.get_actor_films_address()
         print(film_address_list)
-        # film_info_list = self.parse_film_info(film_address_list)
+        film_info_list = self.parse_film_info(film_address_list)
         # # 保存演员获奖信息到数据库
-        # self.save_film_info(film_info_list)
+        self.save_film_info(film_info_list)
         self.db.close()
 
 
 if __name__ == '__main__':
 
-    list = ['张子枫']
-    # list = ['杨紫', '关晓彤', '孙俪', '杨幂', '范冰冰', '袁泉', '郝蕾', '赵薇', '李冰冰', '刘昊然', '吴磊', '张一山', '胡歌', '彭于晏', '邓超', '吴京', '古天乐',
-    #  '夏雨', '周星驰']
+    # list = ['张子枫']
+    list = ['杨紫', '关晓彤', '孙俪', '杨幂', '范冰冰', '袁泉', '郝蕾', '赵薇', '李冰冰', '刘昊然', '吴磊', '张一山', '胡歌', '彭于晏', '邓超', '吴京', '古天乐',
+     '夏雨', '周星驰']
     for l in list:
         l1 = Spider(l)
         l1.run_task()
