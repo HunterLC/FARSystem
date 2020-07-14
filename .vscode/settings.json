@@ -1,0 +1,7 @@
+{
+    "python.venvFolders": [
+        "E:\\PythonCode\\FARSystem\\venv"
+    ],
+    "python.venvPath": "E:\\PythonCode\\FARSystem\\venv\\Scripts",
+    "python.pythonPath": "venv\\Scripts\\python.exe"
+}

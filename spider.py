@@ -5,13 +5,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import requests
 import math
-import json
-import csv
 import re
-import os
 import traceback
-import time
-
 
 class Spider:
     def __init__(self, actor):
@@ -24,16 +19,13 @@ class Spider:
             'Referer': 'https://movie.douban.com/celebrity/1048026/movies?start=10&format=pic&sortby=time&role=A1',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
         }
-        self.count = 0  # 记录成功爬取的条数
         self.actor = actor
         # 打开数据库连接
-        self.db = pymysql.connect("localhost", "root", "123456", "db7")
+        self.db = pymysql.connect("localhost", "root", "123456", "farsystem")
 
         # 使用cursor()方法获取操作游标
         self.cursor = self.db.cursor()
         self.actor_id = 0
-        self.allscore = 0
-        self.allnumber = 0
         self.proxy = '183.146.213.157:80'
         self.proxies = {
             'http': 'http://' + self.proxy,
@@ -211,6 +203,10 @@ class Spider:
                 self.db.rollback()
 
     def get_actor_films_address(self):
+        """
+        根据当前演员的信息获取其主演的所有电影的链接
+        :return:
+        """
         # headers信息设置过多会导致乱码，所以简化headers
         headers = {
             'Referer': 'https://movie.douban.com/celebrity/1048026/movies?start=10&format=pic&sortby=time&role=A1',
@@ -290,6 +286,12 @@ class Spider:
                         film_img = soup.select('.nbgnbg img')[0]['src']
                         film_info_dic['film_img'] = film_img
                         print('电影图片：{}'.format(film_img))
+                        # 电影导演
+                        film_director = ''
+                        for director in soup.select('a[rel="v:directedBy"]'):
+                            film_director += director.get_text() + " "
+                        film_info_dic['film_director'] = film_director
+                        print('电影导演：{}'.format(film_director))
                         # 电影类型
                         film_type = ''
                         for type in soup.select('span[property="v:genre"]'):
@@ -343,9 +345,14 @@ class Spider:
         return film_info_list
 
     def save_film_info(self, film_info_list):
+        """
+        保存电影信息到数据库中
+        :param film_info_list:
+        :return:
+        """
         for film in film_info_list:
-            sql = "insert into films(actor_id, film_id, film_name, film_year, film_img, film_protagonist, film_type, film_region, film_score, film_comments_sum, film_star_ratio_five, film_star_ratio_four, film_star_ratio_three, film_star_ratio_two, film_star_ratio_one) values(%s,%s,'%s','%s','%s','%s','%s','%s',%s,%s,'%s','%s','%s','%s','%s')" % (
-                self.actor_id, film['film_id'], film['film_name'], film['film_year'], film['film_img'], film['film_protagonist'], film['film_type'], film['film_region'], film['film_score'], film['film_comments_sum'], film['film_star_ratio_five'], film['film_star_ratio_four'], film['film_star_ratio_three'], film['film_star_ratio_two'], film['film_star_ratio_one'])
+            sql = "insert into films(actor_id, film_id, film_name, film_year, film_img, film_director, film_protagonist, film_type, film_region, film_score, film_comments_sum, film_star_ratio_five, film_star_ratio_four, film_star_ratio_three, film_star_ratio_two, film_star_ratio_one) values(%s,%s,'%s','%s','%s','%s','%s','%s','%s',%s,%s,'%s','%s','%s','%s','%s')" % (
+                self.actor_id, film['film_id'], film['film_name'], film['film_year'], film['film_img'], film['film_director'],film['film_protagonist'], film['film_type'], film['film_region'], film['film_score'], film['film_comments_sum'], film['film_star_ratio_five'], film['film_star_ratio_four'], film['film_star_ratio_three'], film['film_star_ratio_two'], film['film_star_ratio_one'])
             try:
                 # 执行sql语句
                 self.cursor.execute(sql)
@@ -358,31 +365,34 @@ class Spider:
 
 
     def run_task(self):
+        """
+        执行工作任务
+        逻辑：获取演员主页的链接 -> 爬取演员的基本信息并保存到数据库 -> 爬取演员的获奖信息并保存到数据库 -> 获取演员所参演电影的链接 -> 爬取演员参演电影的基本信息并保存到数据库
+        """
         # 获取演员主页链接
         actor_address = self.get_actor_home_page_address()
-        # # 解析演员基本信息
-        # actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace, actor_career = self.parse_actor_info(actor_address)
-        # # 存储演员基本信息到数据库
-        # self.save_actor_info(actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace,
-        #                 actor_career)
-        # # 获取演员获奖信息
-        # award_list = self.parse_actor_awards()
-        # # 保存演员获奖信息到数据库
-        # self.save_actor_awards(award_list)
-        # 获取演员参演的电影信息
+        # 解析演员基本信息
+        actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace, actor_career = self.parse_actor_info(actor_address)
+        # 存储演员基本信息到数据库
+        self.save_actor_info(actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace,
+                        actor_career)
+        # 获取演员获奖信息
+        award_list = self.parse_actor_awards()
+        # 保存演员获奖信息到数据库
+        self.save_actor_awards(award_list)
+        # 获取演员参演的电影链接
         film_address_list = self.get_actor_films_address()
         print(film_address_list)
+        # 解析电影的基本信息
         film_info_list = self.parse_film_info(film_address_list)
-        # # 保存演员获奖信息到数据库
+        # 保存演员获奖信息到数据库
         self.save_film_info(film_info_list)
         self.db.close()
 
 
 if __name__ == '__main__':
-
-    # list = ['张子枫']
-    list = ['杨紫', '关晓彤', '孙俪', '杨幂', '范冰冰', '袁泉', '郝蕾', '赵薇', '李冰冰', '刘昊然', '吴磊', '张一山', '胡歌', '彭于晏', '邓超', '吴京', '古天乐',
-     '夏雨', '周星驰']
-    for l in list:
-        l1 = Spider(l)
-        l1.run_task()
+    # 电影演员名单列表，男女各10位，年龄阶段分别为20+、30+、40+
+    actor_name_list = ['杨紫', '周冬雨', '关晓彤', '迪丽热巴', '杨幂', '刘诗诗', '范冰冰', '海清', '赵薇', '章子怡',
+                       '吴磊', '张一山', '刘昊然', '易烊千玺', '黄轩', '王宝强', '彭于晏', '刘烨', '吴京', '黄晓明']
+    for actor in actor_name_list:
+        Spider(actor).run_task()
