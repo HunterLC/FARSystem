@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50562
 File Encoding         : 65001
 
-Date: 2020-07-14 16:20:44
+Date: 2020-07-16 16:22:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,32 +29,34 @@ CREATE TABLE `actors` (
   `actor_birthday` varchar(64) DEFAULT NULL,
   `actor_birthplace` varchar(64) DEFAULT NULL,
   `actor_career` varchar(64) DEFAULT NULL,
+  `actor_avg_films_score` float DEFAULT NULL,
+  `actor_avg_comments_sum` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of actors
 -- ----------------------------
-INSERT INTO `actors` VALUES ('1', '1314124', '杨紫 Andy Yang', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1555007060.58.jpg', '女', '天蝎座', '1992-11-06', '中国,北京', '演员 / 配音 / 音乐');
-INSERT INTO `actors` VALUES ('2', '1274224', '周冬雨 Dongyu Zhou', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1588997827.35.jpg', '女', '水瓶座', '1992-01-31', '中国,河北,石家庄', '演员 / 配音 / 制片人 / 主持人');
-INSERT INTO `actors` VALUES ('3', '1276032', '关晓彤 Xiaotong Guan', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1513504182.91.jpg', '女', '处女座', '1997-09-17', '中国,北京', '演员 / 配音');
-INSERT INTO `actors` VALUES ('4', '1325127', '迪丽热巴 Dilraba', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1580711853.92.jpg', '女', '双子座', '1992-06-03', '中国,新疆,乌鲁木齐', '演员 / 主持人');
-INSERT INTO `actors` VALUES ('5', '1052359', '杨幂 Mi Yang', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p28424.jpg', '女', '处女座', '1986-09-12', '中国,北京', '演员 / 制片人 / 配音 / 动作捕捉');
-INSERT INTO `actors` VALUES ('6', '1274533', '刘诗诗 Shishi Liu', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1586491156.05.jpg', '女', '双鱼座', '1987-03-10', '中国,北京', '演员');
-INSERT INTO `actors` VALUES ('7', '1050059', '范冰冰 Bingbing Fan', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1691.jpg', '女', '处女座', '1981-09-16', '中国,山东,青岛', '演员 / 配音 / 动作捕捉 / 制片人');
-INSERT INTO `actors` VALUES ('8', '1272245', '海清 Qing Hai', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p49399.jpg', '女', '摩羯座', '1977-01-12', '中国,江苏,南京', '演员');
-INSERT INTO `actors` VALUES ('9', '1163713', '赵薇 Wei Zhao', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1487850112.67.jpg', '女', '双鱼座', '1976-03-12', '中国,安徽,芜湖', '演员 / 导演 / 配音 / 主持人 / 制片人');
-INSERT INTO `actors` VALUES ('10', '1041014', '章子怡 Ziyi Zhang', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1359895311.0.jpg', '女', '水瓶座', '1979-02-09', '中国,北京', '演员 / 配音 / 制片人');
-INSERT INTO `actors` VALUES ('11', '1276150', '吴磊 Leo Wu', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1513308156.39.jpg', '男', '摩羯座', '1999-12-26', '中国,上海', '演员');
-INSERT INTO `actors` VALUES ('12', '1274223', '张一山 Yishan Zhang', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1464325118.09.jpg', '男', '金牛座', '1992-05-05', '中国,北京', '演员 / 配音');
-INSERT INTO `actors` VALUES ('13', '1336305', '刘昊然 Haoran Liu', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1473508881.63.jpg', '男', '天秤座', '1997-10-10', '中国,河南,平顶山', '演员 / 配音');
-INSERT INTO `actors` VALUES ('14', '1340022', '易烊千玺 Jackson Yee', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1558665007.28.jpg', '男', '射手座', '2000-11-28', '中国,湖南,怀化', '演员 / 配音');
-INSERT INTO `actors` VALUES ('15', '1276105', '黄轩 Xuan Huang', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1449935218.59.jpg', '男', '双鱼座', '1985-03-03', '中国,甘肃,兰州', '演员');
-INSERT INTO `actors` VALUES ('16', '1274388', '王宝强 Baoqiang Wang', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1356403251.95.jpg', '男', '金牛座', '1982-04-29', '中国,河北,邢台', '演员 / 配音 / 导演');
-INSERT INTO `actors` VALUES ('17', '1013782', '彭于晏 Eddie Peng', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1368156632.65.jpg', '男', '白羊座', '1982-03-24', '中国台湾,澎湖', '演员');
-INSERT INTO `actors` VALUES ('18', '1000572', '刘烨 Ye Liu', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1569318007.83.jpg', '男', '白羊座', '1978-03-23', '中国,吉林,长春', '演员 / 导演 / 编剧 / 配音 / 主持人');
-INSERT INTO `actors` VALUES ('19', '1000525', '吴京 Jing Wu', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1569518817.34.jpg', '男', '白羊座', '1974-04-03', '中国,北京', '演员 / 导演 / 制片人 / 编剧 / 其它');
-INSERT INTO `actors` VALUES ('20', '1041404', '黄晓明 Xiaoming Huang', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1472787652.32.jpg', '男', '天蝎座', '1977-11-13', '中国,山东,青岛', '演员 / 制片人 / 配音 / 主持人');
+INSERT INTO `actors` VALUES ('1', '1314124', '杨紫 Andy Yang', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1555007060.58.jpg', '女', '天蝎座', '1992-11-06', '中国,北京', '演员 / 配音 / 音乐', '6.03036', '38151');
+INSERT INTO `actors` VALUES ('2', '1274224', '周冬雨 Dongyu Zhou', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1588997827.35.jpg', '女', '水瓶座', '1992-01-31', '中国,河北,石家庄', '演员 / 配音 / 制片人 / 主持人', '6.19615', '107696');
+INSERT INTO `actors` VALUES ('3', '1276032', '关晓彤 Xiaotong Guan', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1513504182.91.jpg', '女', '处女座', '1997-09-17', '中国,北京', '演员 / 配音', '6.35455', '47917');
+INSERT INTO `actors` VALUES ('4', '1325127', '迪丽热巴 Dilraba', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1580711853.92.jpg', '女', '双子座', '1992-06-03', '中国,新疆,乌鲁木齐', '演员 / 主持人', '5.67222', '45207');
+INSERT INTO `actors` VALUES ('5', '1052359', '杨幂 Mi Yang', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p28424.jpg', '女', '处女座', '1986-09-12', '中国,北京', '演员 / 制片人 / 配音 / 动作捕捉', '5.89011', '46749');
+INSERT INTO `actors` VALUES ('6', '1274533', '刘诗诗 Shishi Liu', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1586491156.05.jpg', '女', '双鱼座', '1987-03-10', '中国,北京', '演员', '6.5', '38247');
+INSERT INTO `actors` VALUES ('7', '1050059', '范冰冰 Bingbing Fan', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1691.jpg', '女', '处女座', '1981-09-16', '中国,山东,青岛', '演员 / 配音 / 动作捕捉 / 制片人', '6.10978', '57755');
+INSERT INTO `actors` VALUES ('8', '1272245', '海清 Qing Hai', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p49399.jpg', '女', '摩羯座', '1977-01-12', '中国,江苏,南京', '演员', '6.97609', '63002');
+INSERT INTO `actors` VALUES ('9', '1163713', '赵薇 Wei Zhao', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1487850112.67.jpg', '女', '双鱼座', '1976-03-12', '中国,安徽,芜湖', '演员 / 导演 / 配音 / 主持人 / 制片人', '6.68909', '73245');
+INSERT INTO `actors` VALUES ('10', '1041014', '章子怡 Ziyi Zhang', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1359895311.0.jpg', '女', '水瓶座', '1979-02-09', '中国,北京', '演员 / 配音 / 制片人', '6.40417', '89467');
+INSERT INTO `actors` VALUES ('11', '1276150', '吴磊 Leo Wu', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1513308156.39.jpg', '男', '摩羯座', '1999-12-26', '中国,上海', '演员', '6.12059', '49532');
+INSERT INTO `actors` VALUES ('12', '1274223', '张一山 Yishan Zhang', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1464325118.09.jpg', '男', '金牛座', '1992-05-05', '中国,北京', '演员 / 配音', '5.71273', '24261');
+INSERT INTO `actors` VALUES ('13', '1336305', '刘昊然 Haoran Liu', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1473508881.63.jpg', '男', '天秤座', '1997-10-10', '中国,河南,平顶山', '演员 / 配音', '6.7', '140833');
+INSERT INTO `actors` VALUES ('14', '1340022', '易烊千玺 Jackson Yee', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1558665007.28.jpg', '男', '射手座', '2000-11-28', '中国,湖南,怀化', '演员 / 配音', '7.70444', '64556');
+INSERT INTO `actors` VALUES ('15', '1276105', '黄轩 Xuan Huang', 'https://img1.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1449935218.59.jpg', '男', '双鱼座', '1985-03-03', '中国,甘肃,兰州', '演员', '6.56744', '64146');
+INSERT INTO `actors` VALUES ('16', '1274388', '王宝强 Baoqiang Wang', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1356403251.95.jpg', '男', '金牛座', '1982-04-29', '中国,河北,邢台', '演员 / 配音 / 导演', '5.5359', '137271');
+INSERT INTO `actors` VALUES ('17', '1013782', '彭于晏 Eddie Peng', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1368156632.65.jpg', '男', '白羊座', '1982-03-24', '中国台湾,澎湖', '演员', '6.52157', '99492');
+INSERT INTO `actors` VALUES ('18', '1000572', '刘烨 Ye Liu', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1569318007.83.jpg', '男', '白羊座', '1978-03-23', '中国,吉林,长春', '演员 / 导演 / 编剧 / 配音 / 主持人', '6.65802', '35412');
+INSERT INTO `actors` VALUES ('19', '1000525', '吴京 Jing Wu', 'https://img9.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1569518817.34.jpg', '男', '白羊座', '1974-04-03', '中国,北京', '演员 / 导演 / 制片人 / 编剧 / 其它', '6.36316', '96163');
+INSERT INTO `actors` VALUES ('20', '1041404', '黄晓明 Xiaoming Huang', 'https://img3.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1472787652.32.jpg', '男', '天蝎座', '1977-11-13', '中国,山东,青岛', '演员 / 制片人 / 配音 / 主持人', '6.08736', '58622');
 
 -- ----------------------------
 -- Table structure for awards
@@ -311,7 +313,7 @@ CREATE TABLE `films` (
   `film_protagonist` varchar(500) DEFAULT NULL,
   `film_type` varchar(64) DEFAULT NULL,
   `film_region` varchar(64) DEFAULT NULL,
-  `film_score` double DEFAULT NULL,
+  `film_score` float DEFAULT NULL,
   `film_comments_sum` int(11) DEFAULT NULL,
   `film_star_ratio_five` varchar(10) DEFAULT NULL,
   `film_star_ratio_four` varchar(10) DEFAULT NULL,

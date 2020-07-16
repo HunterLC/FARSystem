@@ -33,9 +33,21 @@ An analyzer and recommender for films and actors.
 ```
 
 # 项目日志
+## 2020-07-16
+1. 修改Actors表的结构，新增电影平均分数和平均评论人数
+2. 利用接口完成演员的电影平均分数和平均评论人数计算和保存
+3. 更新farsystem.sql文件
+## 2020-07-15
+1. 修改flask项目的文件框架
+```
+FLASK_APP = run.py
+FLASK_ENV = development
+FLASK_DEBUG = 1
+In folder E:/PythonCode/FARSystem
+E:\PythonCode\FARSystem\venv\Scripts\python.exe -m flask run
+```
 ## 2020-07-14
-1.完成演员数据的爬取并保存到数据库
-
++ 完成演员数据的爬取并保存到数据库
 ```
     # 电影演员名单列表，男女各10位，年龄阶段分别为20+、30+、40+
     actor_name_list = ['杨紫', '周冬雨', '关晓彤', '迪丽热巴', '杨幂', '刘诗诗', '范冰冰', '海清', '赵薇', '章子怡',
@@ -43,21 +55,18 @@ An analyzer and recommender for films and actors.
     for actor in actor_name_list:
         Spider(actor).run_task()
 ```
-2.将数据库转储为SQL文件（farsystem.sql）
++ 将数据库转储为SQL文件（farsystem.sql）
 ## 2020-07-13
-1.给学弟学妹们讲项目任务分工以及第1-2周的工作内容
-
-2.补充电影信息之导演信息的爬取
+1. 给学弟学妹们讲项目任务分工以及第1-2周的工作内容
+2. 补充电影信息之导演信息的爬取
 
 ## 2020-07-11
-1.完成电影信息解析的代码，并保存到数据库
+1. 完成电影信息解析的代码，并保存到数据库
 
 ## 2020-07-10
-1.完善演员基本信息解析的代码
-
-2.完成演员获奖信息的爬取
-
-3.完成演员基本信息和获奖信息保存到mysql数据库
+1. 完善演员基本信息解析的代码
+2. 完成演员获奖信息的爬取
+3. 完成演员基本信息和获奖信息保存到mysql数据库
 
 ## 2020-07-09
-1.爬虫代码编写，目前处于解析演员基本信息阶段
+1. 爬虫代码编写，目前处于解析演员基本信息阶段
