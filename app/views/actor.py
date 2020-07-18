@@ -1,6 +1,8 @@
 import collections
 import math
+import os
 
+import requests
 from flask import Blueprint
 from flask import request
 from flask import render_template
@@ -10,9 +12,9 @@ from ..models import Actors, Awards, Films
 actor_blue = Blueprint('actor', __name__)
 
 
-@actor_blue.route('/')
-def hello_world():
-    return 'Hello World! actor'
+@actor_blue.route('/info')
+def actor_info_index():
+    return render_template('actorinfo.html')
 
 
 @actor_blue.route('/init-info')
@@ -118,7 +120,7 @@ def get_film_region_distribution():
 
             final_dict = {}
             i = 0
-            for k,v in film_region_dict.items():
+            for k, v in film_region_dict.items():
                 region_dict = {'region': k, 'count': v}
                 final_dict[i] = region_dict
                 i += 1
@@ -155,8 +157,63 @@ def get_changed_film_type_by_time():
             film_type_by_time_dict[i] = actor_film_type_by_time_dict
             i += 1
         print(film_type_by_time_dict)
-        """
-        {'2020': {'歌舞': 1}, '2019': {'剧情': 3, '动作': 1}, '2018': {'爱情': 2, '奇幻': 1, '剧情': 1, '音乐': 1, '歌舞': 1}, '2017': {'剧情': 3, '爱情': 1}, '2016': {'喜剧': 2, '奇幻': 2, '武侠': 2, '剧情': 2}, '2015': {'剧情': 3, '惊悚': 1}, '2014': {'剧情': 2, '历史': 1}, '2013': {'剧情': 2}, '2012': {'悬疑': 1, '剧情': 1}, '2011': {'剧情': 1, '爱情': 1}, '2010': {'剧情': 2, '历史': 1, '无': 1}, '2009': {'无': 1, '剧情': 1, '儿童': 1}, '2008': {'喜剧': 1}, '2005': {'喜剧': 2, '家庭': 1, '剧情': 2, '历史': 1, '无': 1}, '2004': {'无': 1}}
-
-        """
         return film_type_by_time_dict
+
+
+@actor_blue.route('/getAwards', methods=['POST', 'GET'])
+def get_awards():
+    if request.method == 'GET':
+        actor_id = request.args.get('actor_id')
+        # 根据演员的id去查询演员的获奖信息
+        award_info = Awards.query.filter_by(actor_id=actor_id).all()
+        if award_info is None:
+            return {
+                'count': 0,
+                'data': '无获奖信息'
+            }
+        else:
+            count = len(award_info)
+            time_list = []
+            for award in award_info:
+                time_list.append(award.award_year)
+            j = 0
+            final_dict = {}
+            for time in sorted(set(time_list), reverse=True):
+                i = 0
+                award_by_time_dict = {}
+                for award in award_info:
+                    if time == award.award_year:
+                        award_by_time_dict[i] = award.to_json()
+                        i += 1
+                final_dict[j] = {'year': time, 'data': award_by_time_dict}
+                j += 1
+            print({
+                'count': count,
+                'data': final_dict
+            })
+            return {
+                'count': count,
+                'data': final_dict
+            }
+
+
+@actor_blue.route('/downloadActorImg', methods=['POST', 'GET'])
+def download_actor_img():
+    actors = db.session.query(Actors).all()
+    db.session.close()
+    for actor in actors:
+        img_name = actor.actor_img.split('/')[-1]
+        img_path = r'E:\PythonCode\FARSystem\static\image\actor\{}'.format(img_name)
+        print(img_path)
+        try:
+            if not os.path.exists(img_path):
+                r = requests.get(actor.actor_img)
+                with open(img_path, 'wb') as f:
+                    f.write(r.content)
+                    f.close()
+                    print("文件保存成功")
+            else:
+                print("文件已存在")
+        except Exception as err:
+            print(err)
+    return 'success'
