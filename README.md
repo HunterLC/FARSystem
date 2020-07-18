@@ -36,7 +36,7 @@ An analyzer and recommender for films and actors.
 ## 2020-07-18
 + 按照年份给出演员的获奖信息
 + web系统首页设计和详细信息界面跳转实现
-![首页截图]()
++ ![首页截图](https://github.com/HunterLC/FARSystem/blob/master/static/image/start.png)
 ## 2020-07-17
 + 完成演员出演电影的类型分布计算
 + 完成演员出演电影的地区分布计算
