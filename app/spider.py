@@ -8,6 +8,7 @@ import math
 import re
 import traceback
 
+
 class Spider:
     def __init__(self, actor):
         self.headers = {
@@ -314,7 +315,7 @@ class Spider:
                         film_info_dic['film_comments_sum'] = film_comments_sum
                         print('电影评分人数：{}'.format(film_comments_sum))
                         # 定位到电影星级评论的div
-                        soup_star_div = soup.find('div',class_='ratings-on-weight')
+                        soup_star_div = soup.find('div', class_='ratings-on-weight')
                         # 五星率
                         film_star_ratio_five = soup_star_div.find_all('div')[0].find(class_='rating_per').string
                         film_info_dic['film_star_ratio_five'] = film_star_ratio_five
@@ -352,7 +353,11 @@ class Spider:
         """
         for film in film_info_list:
             sql = "insert into films(actor_id, film_id, film_name, film_year, film_img, film_director, film_protagonist, film_type, film_region, film_score, film_comments_sum, film_star_ratio_five, film_star_ratio_four, film_star_ratio_three, film_star_ratio_two, film_star_ratio_one) values(%s,%s,'%s','%s','%s','%s','%s','%s','%s',%s,%s,'%s','%s','%s','%s','%s')" % (
-                self.actor_id, film['film_id'], film['film_name'], film['film_year'], film['film_img'], film['film_director'],film['film_protagonist'], film['film_type'], film['film_region'], film['film_score'], film['film_comments_sum'], film['film_star_ratio_five'], film['film_star_ratio_four'], film['film_star_ratio_three'], film['film_star_ratio_two'], film['film_star_ratio_one'])
+                self.actor_id, film['film_id'], film['film_name'], film['film_year'], film['film_img'],
+                film['film_director'], film['film_protagonist'], film['film_type'], film['film_region'],
+                film['film_score'], film['film_comments_sum'], film['film_star_ratio_five'],
+                film['film_star_ratio_four'], film['film_star_ratio_three'], film['film_star_ratio_two'],
+                film['film_star_ratio_one'])
             try:
                 # 执行sql语句
                 self.cursor.execute(sql)
@@ -363,7 +368,6 @@ class Spider:
                 traceback.print_exc()
                 self.db.rollback()
 
-
     def run_task(self):
         """
         执行工作任务
@@ -372,10 +376,11 @@ class Spider:
         # 获取演员主页链接
         actor_address = self.get_actor_home_page_address()
         # 解析演员基本信息
-        actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace, actor_career = self.parse_actor_info(actor_address)
+        actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace, actor_career = self.parse_actor_info(
+            actor_address)
         # 存储演员基本信息到数据库
         self.save_actor_info(actor_c_name, actor_img, actor_gender, actor_horoscope, actor_birthday, actor_birthplace,
-                        actor_career)
+                             actor_career)
         # 获取演员获奖信息
         award_list = self.parse_actor_awards()
         # 保存演员获奖信息到数据库

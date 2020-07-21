@@ -158,7 +158,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open">
-            <a href="#" class="nav-link active">
+            <a class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 功能菜单
@@ -167,7 +167,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="{{ url_for('start') }}" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
                   <p>演员列表</p>
                 </a>
@@ -326,7 +326,7 @@
 <script>
     function showMore(self) {
         console.log(self.id)
-        window.location.href = "{{ url_for('actor.actor_info_index') }}"+"?actor_id="+self.id;
+        window.location.href = "{{ url_for('actor.get_actor_info') }}"+"?actor_id="+self.id;
     }
 </script>
 </body>

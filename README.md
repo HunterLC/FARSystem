@@ -33,6 +33,15 @@ An analyzer and recommender for films and actors.
 ```
 
 # 项目日志
+## 2020-07-21
++ 设计演员个人信息界面的个人信息展示模块
++ 设计获奖时间线
++ ![演员信息之获奖时间线截图](https://github.com/HunterLC/FARSystem/blob/master/static/image/actor_info_award_timeline.png)
+## 2020-07-20
++ 测试Apriori算法效果，min_support参数不宜太小，否则计算量过大
+## 2020-07-19
++ 给学弟学妹答疑第一周工作任务，安排第二周工作
++ 编写部分Apriori关联挖掘算法
 ## 2020-07-18
 + 按照年份给出演员的获奖信息
 + web系统首页设计和详细信息界面跳转实现

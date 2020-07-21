@@ -1,20 +1,16 @@
 import collections
 import math
 import os
-
+import datetime
 import requests
 from flask import Blueprint
 from flask import request
 from flask import render_template
 from .. import db
+from ..apriori import Apriori
 from ..models import Actors, Awards, Films
 
 actor_blue = Blueprint('actor', __name__)
-
-
-@actor_blue.route('/info')
-def actor_info_index():
-    return render_template('actorinfo.html')
 
 
 @actor_blue.route('/init-info')
@@ -161,40 +157,40 @@ def get_changed_film_type_by_time():
 
 
 @actor_blue.route('/getAwards', methods=['POST', 'GET'])
-def get_awards():
+def get_awards(id=''):
     if request.method == 'GET':
-        actor_id = request.args.get('actor_id')
-        # 根据演员的id去查询演员的获奖信息
-        award_info = Awards.query.filter_by(actor_id=actor_id).all()
-        if award_info is None:
-            return {
-                'count': 0,
-                'data': '无获奖信息'
-            }
-        else:
-            count = len(award_info)
-            time_list = []
+        print('hhh11')
+        actor_id = request.args.get('actor_id').replace('moreButton', '')
+    else:
+        print('hhh')
+        actor_id = id
+    # 根据演员的id去查询演员的获奖信息
+    award_info = Awards.query.filter_by(actor_id=actor_id).all()
+    if award_info is None:
+        return {
+            'count': 0,
+            'data': '无获奖信息'
+        }
+    else:
+        count = len(award_info)
+        time_list = []
+        for award in award_info:
+            time_list.append(award.award_year)
+        j = 0
+        final_dict = {}
+        for time in sorted(set(time_list), reverse=True):
+            i = 0
+            award_by_time_dict = {}
             for award in award_info:
-                time_list.append(award.award_year)
-            j = 0
-            final_dict = {}
-            for time in sorted(set(time_list), reverse=True):
-                i = 0
-                award_by_time_dict = {}
-                for award in award_info:
-                    if time == award.award_year:
-                        award_by_time_dict[i] = award.to_json()
-                        i += 1
-                final_dict[j] = {'year': time, 'data': award_by_time_dict}
-                j += 1
-            print({
-                'count': count,
-                'data': final_dict
-            })
-            return {
-                'count': count,
-                'data': final_dict
-            }
+                if time == award.award_year:
+                    award_by_time_dict[i] = award.to_json()
+                    i += 1
+            final_dict[j] = {'year': time, 'data': award_by_time_dict}
+            j += 1
+        return {
+            'count': count,
+            'data': final_dict
+        }
 
 
 @actor_blue.route('/downloadActorImg', methods=['POST', 'GET'])
@@ -217,3 +213,78 @@ def download_actor_img():
         except Exception as err:
             print(err)
     return 'success'
+
+
+def get_frequent_cooperation_by_id(name, id, min_support=5):
+    """
+    根据演员的姓名和演员id，利用Apriori算法获得合作最多的一名演员姓名
+    :param name: 演员的姓名，含有英文，例如【杨紫 Andy Yang】
+    :param id: 演员的唯一标识
+    :return: 合作最多的一名演员姓名
+    """
+    # 演员合作数据列表
+    dataset_cooperation = []
+    # 中文名
+    chinese_name = name.split(' ')[0]
+    films = Films.query.filter_by(actor_id=id).all()
+    db.session.close()
+    for film in films:
+        item = film.film_protagonist.split(' ')[:-1]
+        dataset_cooperation.append(item)
+    # 频繁项集，支持度，关联规则
+    L, support_data, rule_list = Apriori(dataset=dataset_cooperation, min_support=min_support, min_conf=0.01).apriori()
+    for rule in rule_list:
+        # 寻找由该演员推导的置信度最高的那位演员姓名
+        if chinese_name == list(rule[0])[0]:
+            return list(rule[1])[0]
+
+
+def get_actor_age_by_birthday(actor_birthday):
+    """
+    根据字符时间计算年龄
+    :param actor_birthday: 演员出生日期 YYYY-mm-dd
+    :return: 年龄
+    """
+    birthday = datetime.datetime.strptime(actor_birthday, '%Y-%m-%d')
+    today = datetime.datetime.today()
+    try:
+        temp = birthday.replace(year=today.year)
+    # 异常出现在2月29日，且当年并非闰年
+    except ValueError:
+        temp = birthday.replace(year=today.year, day=birthday.day - 1)
+    if temp > today:
+        return today.year - birthday.year - 1
+    else:
+        return today.year - birthday.year
+
+
+@actor_blue.route('/getActorInfo', methods=['POST', 'GET'])
+def get_actor_info():
+    if request.method == 'GET':
+        # 前端传过来的id格式中含有前缀moreButton
+        actor_id = request.args.get('actor_id').replace('moreButton', '')
+        # 根据演员的id去查询演员的基本信息
+        actor_info = Actors.query.filter_by(actor_id=actor_id).all()[0]
+        db.session.close()
+        # 演员中文名
+        Chinese_name = actor_info.actor_c_name.split(' ')[0]
+        # 演员英文名
+        English_name = actor_info.actor_c_name.replace(Chinese_name, '').lstrip()
+        # 合作最多演员名字
+        min_cooperation_times = 5
+        # 年龄
+        age = get_actor_age_by_birthday(actor_info.actor_birthday)
+        # 头像编号
+        avatar = actor_info.actor_img.split('/')[-1]
+        while (True):
+            frequent_cooperation = get_frequent_cooperation_by_id(actor_info.actor_c_name, actor_id,
+                                                                  min_support=min_cooperation_times)
+            if frequent_cooperation is not None:
+                break
+            min_cooperation_times -= 1
+        # 演员获奖信息
+        award_info = get_awards(actor_id)
+        print(award_info)
+        colorful = ['bg-primary', 'bg-pink', 'bg-warning', 'bg-info', 'bg-purple', 'bg-success', 'bg-danger']
+        return render_template('actorinfo.html', Color=colorful, Award=award_info, avatar=avatar, age=age, Chinese_name=Chinese_name,
+                               English_name=English_name, Actor=actor_info, frequent_cooperation=frequent_cooperation)
