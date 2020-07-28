@@ -29,7 +29,7 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="index3.html" class="nav-link">首页</a>
+                <a href="{{ url_for('start') }}" class="nav-link">首页</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">联系人</a>
@@ -177,9 +177,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ url_for('film.start') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>未定</p>
+                                    <p>电影列表</p>
                                 </a>
                             </li>
                         </ul>
@@ -211,7 +211,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item"><a href="{{ url_for('start') }}">演员列表</a></li>
                             <li class="breadcrumb-item active">演员详细信息</li>
                         </ol>
                     </div><!-- /.col -->
@@ -226,249 +226,212 @@
                 <!-- Default box -->
                 <div class="row">
                     <div class="col-md-4">
-                        <!-- Widget: user widget style 1 -->
-                        <div class="card card-widget widget-user">
-                            <!-- Add the bg color to the header using any of the bg-* classes -->
-                            <div class="widget-user-header text-white"
-                                 style="background: url('/static/dist/img/photo1.png') center center;">
-                                <h3 class="widget-user-username text-right">{{ Chinese_name }}</h3>
-                                <h5 class="widget-user-desc text-right">{{ English_name }}</h5>
-                            </div>
-                            <div class="widget-user-image">
-                                <img class="img-circle" src="/static/image/actor/{{ avatar }}" alt="User Avatar">
-                            </div>
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-sm-4 border-right">
-                                        <div class="description-block">
-                                            <h5 class="description-header" style="font-size: x-large">{{ age }}</h5>
-                                            <span class="description-text">年龄</span>
-                                        </div>
-                                        <!-- /.description-block -->
-                                    </div>
-                                    <!-- /.col -->
-                                    <div class="col-sm-4 border-right">
-                                        <div class="description-block">
-                                            <h5 class="description-header"
-                                                style="font-size: x-large">{{ Actor.actor_avg_films_score | round(2, 'floor') }}</h5>
-                                            <span class="description-text">电影平均得分</span>
-                                        </div>
-                                        <!-- /.description-block -->
-                                    </div>
-                                    <!-- /.col -->
-                                    <div class="col-sm-4">
-                                        <div class="description-block">
-                                            <h5 class="description-header"
-                                                style="font-size: x-large">{{ Actor.actor_avg_comments_sum }}</h5>
-                                            <span class="description-text">平均评论人数</span>
-                                        </div>
-                                        <!-- /.description-block -->
-                                    </div>
-                                    <!-- /.col -->
+                        <div class="sticky-top mb-4">
+                            <!-- Widget: user widget style 1 -->
+                            <div class="card card-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header text-white"
+                                     style="background: url('/static/dist/img/photo1.png') center center;">
+                                    <h3 class="widget-user-username text-right">{{ Chinese_name }}</h3>
+                                    <h5 class="widget-user-desc text-right">{{ English_name }}</h5>
                                 </div>
-                                <!-- /.row -->
-                                <!-- About Me Box -->
-                                <div class="bg-transparent">
-                                    <div class="card-header">
-                                        <h3 class="card-title">更多信息</h3>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-
-                                        <strong><i class="fas fa-feather-alt mr-1"></i> 性别</strong>
-
-                                        <p class="text-muted">
-                                            {{ Actor.actor_gender }}
-                                        </p>
-
-                                        <hr>
-
-                                        <strong><i class="far fa-star mr-1"></i> 星座</strong>
-
-                                        <p class="text-muted">{{ Actor.actor_horoscope }}</p>
-
-                                        <hr>
-
-                                        <strong><i class="fas fa-baby mr-1"></i> 出生日期</strong>
-
-                                        <p class="text-muted">
-                                            {{ Actor.actor_birthday }}
-                                        </p>
-
-                                        <hr>
-
-                                        <strong><i class="fas fa-map-marker-alt mr-1"></i> 出生地点</strong>
-
-                                        <p class="text-muted">{{ Actor.actor_birthplace }}</p>
-
-                                        <hr>
-
-                                        <strong><i class="fas fa-pencil-alt mr-1"></i> 职业技能</strong>
-
-                                        <p class="text-muted">
-                                            {{ Actor.actor_career }}
-                                        </p>
-
-                                        <hr>
-
-                                        <strong><i class="fas fa-users mr-1"></i> 合作最多的演员</strong>
-
-                                        <p class="text-muted">
-                                            {{ frequent_cooperation }}
-                                        </p>
-
-                                        <hr>
-
-
-                                    </div>
-                                    <!-- /.card-body -->
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="/static/image/actor/{{ avatar }}" alt="User Avatar">
                                 </div>
-                                <!-- /.card -->
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header" style="font-size: x-large">{{ age }}</h5>
+                                                <span class="description-text">年龄</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header"
+                                                    style="font-size: x-large">{{ Actor.actor_avg_films_score | round(2, 'floor') }}</h5>
+                                                <span class="description-text">电影平均得分</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4">
+                                            <div class="description-block">
+                                                <h5 class="description-header"
+                                                    style="font-size: x-large">{{ Actor.actor_avg_comments_sum }}</h5>
+                                                <span class="description-text">平均评论人数</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                    <!-- About Me Box -->
+                                    <div class="bg-transparent">
+                                        <div class="card-header">
+                                            <h3 class="card-title">更多信息</h3>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+
+                                            <strong><i class="fas fa-feather-alt mr-1"></i> 性别</strong>
+
+                                            <p class="text-muted" style="height: 10px">
+                                                {{ Actor.actor_gender }}
+                                            </p>
+
+                                            <hr>
+
+                                            <strong><i class="far fa-star mr-1"></i> 星座</strong>
+
+                                            <p class="text-muted" style="height: 10px">{{ Actor.actor_horoscope }}</p>
+
+                                            <hr>
+
+                                            <strong><i class="fas fa-baby mr-1"></i> 出生日期</strong>
+
+                                            <p class="text-muted" style="height: 10px">
+                                                {{ Actor.actor_birthday }}
+                                            </p>
+
+                                            <hr>
+
+                                            <strong><i class="fas fa-map-marker-alt mr-1"></i> 出生地点</strong>
+
+                                            <p class="text-muted " style="height: 10px">{{ Actor.actor_birthplace }}</p>
+
+                                            <hr>
+
+                                            <strong><i class="fas fa-pencil-alt mr-1"></i> 职业技能</strong>
+
+                                            <p class="text-muted" style="height: 10px">
+                                                {{ Actor.actor_career }}
+                                            </p>
+
+                                            <hr>
+
+                                            <strong><i class="fas fa-users mr-1"></i> 合作最多的演员</strong>
+
+                                            <p class="text-muted" style="height: 10px">
+                                                {{ frequent_cooperation }}
+                                            </p>
+
+
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
                             </div>
+                            <!-- /.widget-user -->
                         </div>
-                        <!-- /.widget-user -->
+
                     </div>
                     <!-- /.col -->
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header p-2">
                                 <ul class="nav nav-pills">
-                                    <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">影视资源</a>
+                                    <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">数据统计</a>
                                     </li>
                                     <li class="nav-item"><a class="nav-link" href="#timeline"
                                                             data-toggle="tab">获奖信息({{ Award.count }})</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#settings"
-                                                            data-toggle="tab">Settings</a></li>
+                                                            data-toggle="tab">电影列表({{Films|length}})</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
                                 <div class="tab-content">
                                     <div class="active tab-pane" id="activity">
-                                        <!-- Post -->
-                                        <div class="post">
-                                            <div class="user-block">
-                                                <img class="img-circle img-bordered-sm"
-                                                     src="/static/dist/img/user1-128x128.jpg" alt="user image">
-                                                <span class="username">
-                          <a href="#">Jonathan Burke Jr.</a>
-                          <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
-                        </span>
-                                                <span class="description">Shared publicly - 7:30 PM today</span>
+                                        <div class="card bg-transparent">
+                                            <div class="card-header">
+                                                <h3 class="card-title">出演电影类型分布</h3>
+
+                                                <div class="card-tools">
+                                                    <button type="button" class="btn btn-tool"
+                                                            data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <!-- /.user-block -->
-                                            <p>
-                                                Lorem ipsum represents a long-held tradition for designers,
-                                                typographers and the like. Some people hate it and argue for
-                                                its demise, but others ignore the hate as they create awesome
-                                                tools to help create filler text for everyone from bacon lovers
-                                                to Charlie Sheen fans.
-                                            </p>
-
-                                            <p>
-                                                <a href="#" class="link-black text-sm mr-2"><i
-                                                        class="fas fa-share mr-1"></i> Share</a>
-                                                <a href="#" class="link-black text-sm"><i
-                                                        class="far fa-thumbs-up mr-1"></i> Like</a>
-                                                <span class="float-right">
-                          <a href="#" class="link-black text-sm">
-                            <i class="far fa-comments mr-1"></i> Comments (5)
-                          </a>
-                        </span>
-                                            </p>
-
-                                            <input class="form-control form-control-sm" type="text"
-                                                   placeholder="Type a comment">
-                                        </div>
-                                        <!-- /.post -->
-
-                                        <!-- Post -->
-                                        <div class="post clearfix">
-                                            <div class="user-block">
-                                                <img class="img-circle img-bordered-sm"
-                                                     src="/static/dist/img/user7-128x128.jpg" alt="User Image">
-                                                <span class="username">
-                          <a href="#">Sarah Ross</a>
-                          <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
-                        </span>
-                                                <span class="description">Sent you a message - 3 days ago</span>
-                                            </div>
-                                            <!-- /.user-block -->
-                                            <p>
-                                                Lorem ipsum represents a long-held tradition for designers,
-                                                typographers and the like. Some people hate it and argue for
-                                                its demise, but others ignore the hate as they create awesome
-                                                tools to help create filler text for everyone from bacon lovers
-                                                to Charlie Sheen fans.
-                                            </p>
-
-                                            <form class="form-horizontal">
-                                                <div class="input-group input-group-sm mb-0">
-                                                    <input class="form-control form-control-sm" placeholder="Response">
-                                                    <div class="input-group-append">
-                                                        <button type="submit" class="btn btn-danger">Send</button>
+                                            <div class="card-body">
+                                                <div class="chartjs-size-monitor">
+                                                    <div class="chartjs-size-monitor-expand">
+                                                        <div class=""></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink">
+                                                        <div class=""></div>
                                                     </div>
                                                 </div>
-                                            </form>
-                                        </div>
-                                        <!-- /.post -->
+                                                <canvas id="firstPieChart"
+                                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 547px;"
+                                                        width="683" height="312"
+                                                        class="chartjs-render-monitor">
+                                                </canvas>
+                                                <!-- The timeline -->
+                                                <div class="timeline timeline-inverse">
 
-                                        <!-- Post -->
-                                        <div class="post">
-                                            <div class="user-block">
-                                                <img class="img-circle img-bordered-sm"
-                                                     src="/static/dist/img/user6-128x128.jpg" alt="User Image">
-                                                <span class="username">
-                          <a href="#">Adam Jones</a>
-                          <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
-                        </span>
-                                                <span class="description">Posted 5 photos - 5 days ago</span>
-                                            </div>
-                                            <!-- /.user-block -->
-                                            <div class="row mb-3">
-                                                <div class="col-sm-6">
-                                                    <img class="img-fluid" src="/static/dist/img/photo1.png"
-                                                         alt="Photo">
-                                                </div>
-                                                <!-- /.col -->
-                                                <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <img class="img-fluid mb-3"
-                                                                 src="/static/dist/img/photo2.png" alt="Photo">
-                                                            <img class="img-fluid" src="/static/dist/img/photo3.jpg"
-                                                                 alt="Photo">
+                                                    {% for key, value in FilmType.items() %}
+                                                        <!-- timeline time label -->
+                                                        <div class="time-label">
+                                                            <span class="{{ Color[key%7] }}">{{ value.year }} 年</span>
                                                         </div>
-                                                        <!-- /.col -->
-                                                        <div class="col-sm-6">
-                                                            <img class="img-fluid mb-3"
-                                                                 src="/static/dist/img/photo4.jpg" alt="Photo">
-                                                            <img class="img-fluid" src="/static/dist/img/photo1.png"
-                                                                 alt="Photo">
-                                                        </div>
-                                                        <!-- /.col -->
+                                                        <!-- /.timeline-label -->
+                                                        {% for ft_key, ft_value in value.data.items() %}
+                                                            <!-- timeline item -->
+                                                            <div>
+                                                                <i class="fas fa-star {{ Color[ft_key%7] }}"></i>
+
+                                                                <div class="timeline-item">
+                                                            <span class="time"><i
+                                                                    class="far fa-clock"></i> {{ value.year }}</span>
+
+                                                                    <h3 class="timeline-header">{{ ft_value.type }}<a
+                                                                            style="font-size: large">   {{ ft_value.count }}</a>
+                                                                    </h3>
+
+
+                                                                </div>
+                                                            </div>
+                                                            <!-- END timeline item -->
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                    <div>
+                                                        <i class="far fa-clock bg-gray"></i>
                                                     </div>
-                                                    <!-- /.row -->
                                                 </div>
-                                                <!-- /.col -->
+
                                             </div>
-                                            <!-- /.row -->
-
-                                            <p>
-                                                <a href="#" class="link-black text-sm mr-2"><i
-                                                        class="fas fa-share mr-1"></i> Share</a>
-                                                <a href="#" class="link-black text-sm"><i
-                                                        class="far fa-thumbs-up mr-1"></i> Like</a>
-                                                <span class="float-right">
-                          <a href="#" class="link-black text-sm">
-                            <i class="far fa-comments mr-1"></i> Comments (5)
-                          </a>
-                        </span>
-                                            </p>
-
-                                            <input class="form-control form-control-sm" type="text"
-                                                   placeholder="Type a comment">
+                                            <!-- /.card-body -->
                                         </div>
-                                        <!-- /.post -->
+                                        <div class="card bg-transparent">
+                                            <div class="card-header">
+                                                <h3 class="card-title">出演电影地区分布</h3>
+
+                                                <div class="card-tools">
+                                                    <button type="button" class="btn btn-tool"
+                                                            data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="chartjs-size-monitor">
+                                                    <div class="chartjs-size-monitor-expand">
+                                                        <div class=""></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink">
+                                                        <div class=""></div>
+                                                    </div>
+                                                </div>
+                                                <canvas id="secondPieChart"
+                                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 547px;"
+                                                        width="683" height="312"
+                                                        class="chartjs-render-monitor"></canvas>
+
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
                                     </div>
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="timeline">
@@ -487,7 +450,8 @@
                                                         <i class="fas fa-envelope {{ Color[awd_key%7] }}"></i>
 
                                                         <div class="timeline-item">
-                                                            <span class="time"><i class="far fa-clock"></i> {{ value.year }}</span>
+                                                            <span class="time"><i
+                                                                    class="far fa-clock"></i> {{ value.year }}</span>
 
                                                             <h3 class="timeline-header">{{ awd_value.award_ceremony }}</h3>
 
@@ -497,8 +461,8 @@
                                                                     <a style="font-size: large">{{ awd_value.award_name }}</a>
 
                                                                 {% else %}
-                                                                   <a style="font-size: large">{{ awd_value.award_name }}</a>
-                                                                {% endif%}
+                                                                    <a style="font-size: large">{{ awd_value.award_name }}</a>
+                                                                {% endif %}
 
                                                             </div>
                                                         </div>
@@ -513,64 +477,65 @@
                                     </div>
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="settings">
-                                        <form class="form-horizontal">
-                                            <div class="form-group row">
-                                                <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                                                <div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="inputName"
-                                                           placeholder="Name">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                                                <div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="inputEmail"
-                                                           placeholder="Email">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="inputName2"
-                                                           placeholder="Name">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="inputExperience"
-                                                       class="col-sm-2 col-form-label">Experience</label>
-                                                <div class="col-sm-10">
-                                                    <textarea class="form-control" id="inputExperience"
-                                                              placeholder="Experience"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="inputSkills"
-                                                           placeholder="Skills">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="offset-sm-2 col-sm-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox"> I agree to the <a href="#">terms and
-                                                            conditions</a>
-                                                        </label>
+                                        <div class="row d-flex align-items-stretch">
+                                            {% for film in Films %}
+                                                <div class="col-12 col-sm-6 col-md-6 d-flex align-items-stretch">
+                                                    <div class="card bg-light">
+                                                        <div class="card-header text-muted border-bottom-0">
+                                                            {{ film.film_year }}
+                                                        </div>
+                                                        <div class="card-body pt-0">
+                                                            <div class="row">
+                                                                <div class="col-5 text-center">
+                                                                    <img src="/static/image/film/{{ film.film_img }}" alt=""
+                                                                         class="img-rounded img-fluid">
+                                                                </div>
+                                                                <div class="col-7">
+                                                                    <h2 class="lead"><b>{{  film.film_name }}</b></h2>
+                                                                    <p class="text-muted text-sm">
+                                                                        <b>主演: </b>
+                                                                        {{  film.film_protagonist }}
+                                                                    </p>
+                                                                    <p class="text-muted text-sm">
+                                                                        <b>电影类型: </b> {{  film.film_type }}
+                                                                    </p>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <div class="text-right">
+                                                                <a class="btn-lg">
+                                                                        <i style="color:black;font-size: xx-large">{{  film.film_score }}</i>
+                                                                </a>
+                                                                <a id="moreFilmButton{{ film.film_id }}"
+                                                                   class="btn btn-sm btn-primary"
+                                                                   onclick="showMore(this);">
+                                                                    <i class="fas fa-user"
+                                                                       style="color:white;font-size: small">查看更多</i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="offset-sm-2 col-sm-10">
-                                                    <button type="submit" class="btn btn-danger">Submit</button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                            {% endfor %}
+
+                                        </div>
+
+
                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->
+                            <div class="card-footer">
+                                <nav aria-label="Contacts Page Navigation">
+                                    <ul class="pagination justify-content-center m-0">
+                                        <span>到底了（づ￣3￣）づ╭❤～</span>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                         <!-- /.nav-tabs-custom -->
                     </div>
@@ -616,6 +581,15 @@
 <script src="/static/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/static/dist/js/demo.js"></script>
-
+<!-- ChartJS -->
+<script src="/static/plugins/chart.js/Chart.min.js"></script>
+<!--本页面的js-->
+<script src="/static/dist/js/pages/actor/actorinfo.js"></script>
+<script>
+    function showMore(self) {
+        console.log(self.id);
+        window.location.href = "{{ url_for('actor.get_actor_info') }}" + "?actor_id=" + self.id;
+    }
+</script>
 </body>
 </html>

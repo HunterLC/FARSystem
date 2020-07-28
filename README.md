@@ -33,6 +33,14 @@ An analyzer and recommender for films and actors.
 ```
 
 # 项目日志
+## 2020-07-28
++ 设计演员统计信息界面
++ ![演员信息之统计信息截图](https://github.com/HunterLC/FARSystem/blob/master/static/image/actor_info_data_statistic.png)
++ 设计演员电影信息界面
++ ![演员信息之电影列表截图](https://github.com/HunterLC/FARSystem/blob/master/static/image/actor_info_film_list.png)
++ 设计菜单栏之电影列表界面，完成分页设计和部分检索设计
+## 2020-07-22
++ 设计演员出演电影类型的饼图
 ## 2020-07-21
 + 设计演员个人信息界面的个人信息展示模块
 + 设计获奖时间线

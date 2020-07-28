@@ -3,9 +3,11 @@ import math
 import os
 import datetime
 import requests
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask import request
 from flask import render_template
+
+from .film import get_films_by_actor_id
 from .. import db
 from ..apriori import Apriori
 from ..models import Actors, Awards, Films
@@ -57,7 +59,10 @@ def get_film_type_distribution(time=0):
     :return:
     """
     if request.method == 'GET':
-        actor_id = request.args.get('actor_id')
+        if 'moreButton' not in request.args.get('actor_id'):
+            actor_id = request.args.get('actor_id')
+        else:
+            actor_id = request.args.get('actor_id').replace('moreButton', '')
         # 根据演员的id去查询演员的电影
         if time != 0:
             film_info = Films.query.filter_by(actor_id=actor_id, film_year=time).all()
@@ -81,11 +86,6 @@ def get_film_type_distribution(time=0):
                 type_dict = {'type': k, 'count': v}
                 final_dict[i] = type_dict
                 i += 1
-            """
-            for example {0: {'region': '中国大陆', 'count': 50}, 1: {'region': '中国香港', 'count': 1}, 2: {'region': '中国台湾', 'count': 1}, 3: {'region': '中国', 'count': 1}, 4: {'region': '无', 'count': 5}}
-
-            """
-            print(final_dict)
             return final_dict
         else:
             return '没有查询到电影的类型信息'
@@ -98,7 +98,7 @@ def get_film_region_distribution():
     :return:
     """
     if request.method == 'GET':
-        actor_id = request.args.get('actor_id')
+        actor_id = request.args.get('actor_id').replace('moreButton', '')
         # 根据演员的id去查询演员的电影
         film_info = Films.query.filter_by(actor_id=actor_id).all()
         db.session.close()
@@ -124,7 +124,6 @@ def get_film_region_distribution():
             for example {0: {'region': '中国大陆', 'count': 50}, 1: {'region': '中国香港', 'count': 1}, 2: {'region': '中国台湾', 'count': 1}, 3: {'region': '中国', 'count': 1}, 4: {'region': '无', 'count': 5}}
 
             """
-            print(final_dict)
             return final_dict
         else:
             return '没有查询到电影的地区信息'
@@ -138,7 +137,7 @@ def get_changed_film_type_by_time():
     :return:
     """
     if request.method == 'GET':
-        actor_id = request.args.get('actor_id')
+        actor_id = request.args.get('actor_id').replace('moreButton', '')
         # 根据演员的id去查询演员的电影年份
         film_list = Films.query.filter_by(actor_id=actor_id).all()
         time_list = []
@@ -152,17 +151,14 @@ def get_changed_film_type_by_time():
             actor_film_type_by_time_dict = {'year': time, 'data': time_dict}
             film_type_by_time_dict[i] = actor_film_type_by_time_dict
             i += 1
-        print(film_type_by_time_dict)
         return film_type_by_time_dict
 
 
 @actor_blue.route('/getAwards', methods=['POST', 'GET'])
 def get_awards(id=''):
     if request.method == 'GET':
-        print('hhh11')
         actor_id = request.args.get('actor_id').replace('moreButton', '')
     else:
-        print('hhh')
         actor_id = id
     # 根据演员的id去查询演员的获奖信息
     award_info = Awards.query.filter_by(actor_id=actor_id).all()
@@ -284,7 +280,10 @@ def get_actor_info():
             min_cooperation_times -= 1
         # 演员获奖信息
         award_info = get_awards(actor_id)
-        print(award_info)
+        # 演员出演电影类型随时间变化
+        film_type = get_changed_film_type_by_time()
+        # 演员的电影信息
+        films = get_films_by_actor_id()
         colorful = ['bg-primary', 'bg-pink', 'bg-warning', 'bg-info', 'bg-purple', 'bg-success', 'bg-danger']
-        return render_template('actorinfo.html', Color=colorful, Award=award_info, avatar=avatar, age=age, Chinese_name=Chinese_name,
+        return render_template('actorinfo.html', Films=films, FilmType=film_type, Color=colorful, Award=award_info, avatar=avatar, age=age, Chinese_name=Chinese_name,
                                English_name=English_name, Actor=actor_info, frequent_cooperation=frequent_cooperation)

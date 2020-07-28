@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="/static/dist/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="/static/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/static/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -171,13 +174,13 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ url_for('start') }}" class="nav-link active">
+                                <a href="{{ url_for('start') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>演员列表</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ url_for('film.start') }}" class="nav-link">
+                                <a href="{{ url_for('film.start') }}" class="nav-link active">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>电影列表</p>
                                 </a>
@@ -207,12 +210,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">演员列表</h1>
+                        <h1 class="m-0 text-dark">电影列表</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">首页</a></li>
-                            <li class="breadcrumb-item active">演员列表</li>
+                            <li class="breadcrumb-item active">电影列表</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -224,56 +227,110 @@
         <div class="content">
             <div class="container-fluid">
                 <!-- Default box -->
-                <div class="input-group input-group-sm ">
-                    <input id="searchContent" type="text" placeholder="搜索演员姓名..." aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-sm btn-primary" onclick="searchActor();">
-                            <i class="fas fa-search">搜索</i>
-                        </button>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label>电影种类</label>
+                            <div class="select2-blue">
+                                <select class="select2" multiple="multiple" data-placeholder="选择电影类型"
+                                        style="width: 100%;">
+                                    <option>剧情</option>
+                                    <option>爱情</option>
+                                    <option>动作</option>
+                                    <option>科幻</option>
+                                    <option>冒险</option>
+                                    <option>悬疑</option>
+                                    <option>喜剧</option>
+                                    <option>惊悚</option>
+                                    <option>传记</option>
+                                    <option>动画</option>
+                                    <option>家庭</option>
+                                    <option>奇幻</option>
+                                    <option>武侠</option>
+                                    <option>歌舞</option>
+                                    <option>历史</option>
+                                    <option>音乐</option>
+                                    <option>短片</option>
+                                    <option>儿童</option>
+                                    <option>犯罪</option>
+                                    <option>战争</option>
+                                    <option>真人秀</option>
+                                    <option>运动</option>
+                                    <option>纪录片</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>电影年份</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                </div>
+                                <input type="text" class="form-control float-right" id="reservationtime">
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>电影信息</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-pager"></i></span>
+                                </div>
+                                <input id="searchContent" class="form-control float-right" type="text" placeholder="搜索电影名称、演员姓名..." aria-label="Search">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-primary" onclick="searchActor();">
+                                        <i class="fas fa-search">搜索</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <br>
                 <div class="card card-solid">
                     <div class="card-body pb-0">
                         <div class="row d-flex align-items-stretch">
-                            {% for actor in Actors %}
-                                <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+                            {% for film in Films.items %}
+                                <div class="col-12 col-sm-4 col-md-4 d-flex align-items-stretch">
                                     <div class="card bg-light">
                                         <div class="card-header text-muted border-bottom-0">
-                                            {{ actor.actor_c_name }}
+                                            {{ film.film_year }}
                                         </div>
                                         <div class="card-body pt-0">
                                             <div class="row">
-                                                <div class="col-7">
-                                                    <h2 class="lead"><b>{{ actor.actor_c_name }}</b></h2>
-                                                    <p class="text-muted text-sm"><b>职业: </b> {{ actor.actor_career }}
-                                                    </p>
-                                                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                        <li class="small"><span class="fa-li"><i
-                                                                class="fas fa-lg fa-baby"></i></span> 出身日期
-                                                            : {{ actor.actor_birthday }}</li>
-                                                        <li class="small"><span class="fa-li"><i
-                                                                class="fas fa-lg fa-building"></i></span> 出生城市
-                                                            : {{ actor.actor_birthplace }}</li>
-                                                        <li class="small"><span class="fa-li"><i
-                                                                class="fas fa-lg fa-star"></i></span> 星座
-                                                            : {{ actor.actor_horoscope }}</li>
-                                                    </ul>
-                                                </div>
                                                 <div class="col-5 text-center">
-                                                    <img src="/static/image/actor/{{ actor.actor_img }}" alt=""
-                                                         class="img-circle img-fluid">
+                                                    <img src="/static/image/film/{{ film.film_img }}" alt=""
+                                                         class="img-rounded img-fluid">
                                                 </div>
+                                                <div class="col-7">
+                                                    <h2 class="lead"><b>{{ film.film_name }}</b></h2>
+                                                    <p class="text-muted text-sm">
+                                                        <b>主演: </b>
+                                                        {{ film.film_protagonist }}
+                                                    </p>
+                                                    <p class="text-muted text-sm">
+                                                        <b>电影类型: </b> {{ film.film_type }}
+                                                    </p>
+
+                                                </div>
+
                                             </div>
                                         </div>
                                         <div class="card-footer">
                                             <div class="text-right">
-                                                <a href="#" class="btn btn-sm bg-teal">
-                                                    <i class="fas fa-comments"></i> 暂无
+                                                <a class="btn-lg">
+                                                    <i style="color:black;font-size: xx-large">{{ film.film_score }}</i>
                                                 </a>
-                                                <a id="moreButton{{ actor.actor_id }}" class="btn btn-sm btn-primary"
+                                                <a id="moreFilmButton{{ film.film_id }}"
+                                                   class="btn btn-sm btn-primary"
                                                    onclick="showMore(this);">
-                                                    <i class="fas fa-user" style="color:white;font-size: small">查看更多</i>
+                                                    <i class="fas fa-user"
+                                                       style="color:white;font-size: small">查看更多</i>
                                                 </a>
                                             </div>
                                         </div>
@@ -287,7 +344,20 @@
                     <div class="card-footer">
                         <nav aria-label="Contacts Page Navigation">
                             <ul class="pagination justify-content-center m-0">
-                                <span>到底了（づ￣3￣）づ╭❤～</span>
+                                {% for page in Films.iter_pages() %}
+                                    {% if page %}
+                                        {% if page !=Films.page %}
+                                            <li class="page-item"><a class="page-link"
+                                                                     href="{{ url_for('film.start',page=page) }}">{{ page }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item active"><a class="page-link"
+                                                                            href="#">{{ Films.page }}</a></li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+
                             </ul>
                         </nav>
                     </div>
@@ -330,6 +400,8 @@
 <script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/dist/js/adminlte.min.js"></script>
+<!-- Select2 -->
+<script src="/static/plugins/select2/js/select2.full.min.js"></script>
 <script>
     function searchActor() {
         var searchContent = document.getElementById("searchContent").value;
@@ -341,6 +413,16 @@
         console.log(self.id);
         window.location.href = "{{ url_for('actor.get_actor_info') }}" + "?actor_id=" + self.id;
     }
+</script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2();
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+    })
 </script>
 </body>
 </html>
