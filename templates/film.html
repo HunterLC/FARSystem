@@ -232,31 +232,31 @@
                         <div class="form-group">
                             <label>电影种类</label>
                             <div class="select2-blue">
-                                <select class="select2" multiple="multiple" data-placeholder="选择电影类型"
+                                <select id="typeSelect" class="select2" multiple="multiple" data-placeholder="选择电影类型"
                                         style="width: 100%;">
-                                    <option>剧情</option>
-                                    <option>爱情</option>
-                                    <option>动作</option>
-                                    <option>科幻</option>
-                                    <option>冒险</option>
-                                    <option>悬疑</option>
-                                    <option>喜剧</option>
-                                    <option>惊悚</option>
-                                    <option>传记</option>
-                                    <option>动画</option>
-                                    <option>家庭</option>
-                                    <option>奇幻</option>
-                                    <option>武侠</option>
-                                    <option>歌舞</option>
-                                    <option>历史</option>
-                                    <option>音乐</option>
-                                    <option>短片</option>
-                                    <option>儿童</option>
-                                    <option>犯罪</option>
-                                    <option>战争</option>
-                                    <option>真人秀</option>
-                                    <option>运动</option>
-                                    <option>纪录片</option>
+                                    <option>剧情 </option>
+                                    <option>爱情 </option>
+                                    <option>动作 </option>
+                                    <option>科幻 </option>
+                                    <option>冒险 </option>
+                                    <option>悬疑 </option>
+                                    <option>喜剧 </option>
+                                    <option>惊悚 </option>
+                                    <option>传记 </option>
+                                    <option>动画 </option>
+                                    <option>家庭 </option>
+                                    <option>奇幻 </option>
+                                    <option>武侠 </option>
+                                    <option>歌舞 </option>
+                                    <option>历史 </option>
+                                    <option>音乐 </option>
+                                    <option>短片 </option>
+                                    <option>儿童 </option>
+                                    <option>犯罪 </option>
+                                    <option>战争 </option>
+                                    <option>运动 </option>
+                                    <option>真人秀 </option>
+                                    <option>纪录片 </option>
                                 </select>
                             </div>
 
@@ -269,7 +269,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-clock"></i></span>
                                 </div>
-                                <input type="text" class="form-control float-right" id="reservationtime">
+                                <input type="text" class="form-control float-right" id="timeSearch" value="{{ film_year }}">
                             </div>
                             <!-- /.input group -->
                         </div>
@@ -281,9 +281,10 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-pager"></i></span>
                                 </div>
-                                <input id="searchContent" class="form-control float-right" type="text" placeholder="搜索电影名称、演员姓名..." aria-label="Search">
+                                <input id="filmSearchContent" class="form-control float-right" type="text"
+                                       placeholder="搜索电影名称、演员姓名..." aria-label="Search" value="{{ search }}">
                                 <div class="input-group-append">
-                                    <button class="btn btn-sm btn-primary" onclick="searchActor();">
+                                    <button class="btn btn-sm btn-primary" onclick="searchFilm();">
                                         <i class="fas fa-search">搜索</i>
                                     </button>
                                 </div>
@@ -328,7 +329,7 @@
                                                 </a>
                                                 <a id="moreFilmButton{{ film.film_id }}"
                                                    class="btn btn-sm btn-primary"
-                                                   onclick="showMore(this);">
+                                                   onclick="showFilmMore(this);">
                                                     <i class="fas fa-user"
                                                        style="color:white;font-size: small">查看更多</i>
                                                 </a>
@@ -348,7 +349,7 @@
                                     {% if page %}
                                         {% if page !=Films.page %}
                                             <li class="page-item"><a class="page-link"
-                                                                     href="{{ url_for('film.start',page=page) }}">{{ page }}</a>
+                                                                     href="{{ url_for('film.start',page=page, film_year=film_year, film_type=film_type, search=search) }}">{{ page }}</a>
                                             </li>
                                         {% else %}
                                             <li class="page-item active"><a class="page-link"
@@ -403,15 +404,20 @@
 <!-- Select2 -->
 <script src="/static/plugins/select2/js/select2.full.min.js"></script>
 <script>
-    function searchActor() {
-        var searchContent = document.getElementById("searchContent").value;
-        window.location.href = "{{ url_for('start') }}" + "?actor_c_name=" + searchContent;
+    function searchFilm() {
+        let typeSelect = $("#typeSelect option:selected").text(); //电影类型
+        let timeSelect = $("#timeSearch").val();//电影上映时间
+        let inputContent = $("#filmSearchContent").val();//搜索内容
+        console.log(typeSelect);
+        console.log(timeSelect);
+        console.log(inputContent);
+        window.location.href = "{{ url_for('film.start') }}" + "?film_type="+typeSelect+"&film_year="+timeSelect+"&search="+inputContent;
     }
 </script>
 <script>
-    function showMore(self) {
+    function showFilmMore(self) {
         console.log(self.id);
-        window.location.href = "{{ url_for('actor.get_actor_info') }}" + "?actor_id=" + self.id;
+        window.location.href = "{{ url_for('film.get_film_info') }}" + "?film_id=" + self.id;
     }
 </script>
 <script>
@@ -421,7 +427,14 @@
         //Initialize Select2 Elements
         $('.select2bs4').select2({
             theme: 'bootstrap4'
-        })
+        });
+        $("#typeSelect option").each(function () {
+            let txt = $(this).text();
+            str = "{{ film_type }}"+" ";
+            if(str.search(txt) !== -1 ){
+                $(this).attr("selected","selected")
+            }
+        });
     })
 </script>
 </body>

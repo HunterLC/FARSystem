@@ -588,7 +588,7 @@
 <script>
     function showMore(self) {
         console.log(self.id);
-        window.location.href = "{{ url_for('actor.get_actor_info') }}" + "?actor_id=" + self.id;
+        window.location.href = "{{ url_for('film.get_film_info') }}" + "?film_id=" + self.id;
     }
 </script>
 </body>
