@@ -6,11 +6,14 @@ import requests
 from flask import Blueprint, jsonify
 from flask import request
 from flask import render_template
+from sqlalchemy import func, and_
 
 from .film import get_films_by_actor_id
 from .. import db
 from ..apriori import Apriori
 from ..models import Actors, Awards, Films
+import pandas as pd
+import numpy as np
 
 actor_blue = Blueprint('actor', __name__)
 
@@ -77,7 +80,7 @@ def get_film_type_distribution(time=0):
                     film_type_list.append('无')
                 else:
                     film_type_info = film.film_type.split(' ')
-                    film_type_list.extend(film_type_info[0:-2])
+                    film_type_list.extend(film_type_info[0:-1])
             # 元素计数
             film_type_dict = dict(collections.Counter(film_type_list))
             final_dict = {}
@@ -285,5 +288,199 @@ def get_actor_info():
         # 演员的电影信息
         films = get_films_by_actor_id()
         colorful = ['bg-primary', 'bg-pink', 'bg-warning', 'bg-info', 'bg-purple', 'bg-success', 'bg-danger']
-        return render_template('actorinfo.html', Films=films, FilmType=film_type, Color=colorful, Award=award_info, avatar=avatar, age=age, Chinese_name=Chinese_name,
+        return render_template('actorinfo.html', Films=films, FilmType=film_type, Color=colorful, Award=award_info,
+                               avatar=avatar, age=age, Chinese_name=Chinese_name,
                                English_name=English_name, Actor=actor_info, frequent_cooperation=frequent_cooperation)
+
+
+def get_actor_age_group(actor_birthday):
+    """
+    判断演员的年龄段
+    :param actor_birthday: 例如1998-02-05，生日
+    :return: 年龄段 20-30组、30-40组、40-50组
+    """
+    age = get_actor_age_by_birthday(actor_birthday)
+    if 0 < age < 30:
+        return 'after_90s'
+    elif 30 <= age < 40:
+        return 'after_80s'
+    else:
+        return 'after_70s'
+
+
+def actor_is_multi_career(actor_career):
+    """
+    判断演员是否拥有多个职业
+    :param actor_career: 职业字符串
+    :return: 1多职业，0单职业
+    """
+    if actor_career.find('/') != -1:
+        return 1
+    else:
+        return 0
+
+
+def get_actor_faction(actor_birthplace):
+    '''
+    根据演员的出生地判断演员属于北方派系还是南方派系
+    :param actor_birthplace: 出生地
+    :return: 派系 north  south
+    '''
+    faction = actor_birthplace.split(',')[1]
+    north = '北京市、天津市、内蒙、新疆、河北、甘肃、宁夏、山西、陕西、青海、山东、河南、安徽、辽宁、吉林、黑龙江'
+    south = '江苏、浙江、上海、湖北、湖南、四川、重庆市、贵州、云南、广西、江西、福建、广东、海南、西藏、台湾、香港、澳门、三沙'
+    if north.find(faction) != -1:
+        return 'north'
+    elif south.find(faction) != -1:
+        return 'south'
+
+
+def get_actor_horoscope_code(actor_horoscope):
+    list_horoscope = ['白羊座','金牛座','双子座','巨蟹座','狮子座','处女座','天秤座','天蝎座','射手座','摩羯座','水瓶座','双鱼座']
+    for key, value in enumerate(list_horoscope):
+        if value == actor_horoscope:
+            return key+1
+
+
+def get_actor_is_international(actor_id):
+    """
+    判断演员是否是国际化类型（出演的电影曾在中国以外地区播放）
+    :param actor_id: 演员id
+    :return: 1国际化，0非国际化
+    """
+    films = Films.query.filter(
+        and_(actor_id == Films.actor_id, Films.film_region.like('%' + '/' + '%')))
+    db.session.close()
+    if films:
+        for film in films:
+            region = film.film_region.split(' / ')
+            for item in region:
+                if item.find('中国') == -1:
+                    return 1
+        return 0
+    else:
+        return 0
+
+
+def get_actor_film_avg_star(actor_id, star, total):
+    films = Films.query.filter_by(actor_id=actor_id)
+    db.session.close()
+    score = 0
+    if star == 5:
+        for film in films:
+            score += float(film.film_star_ratio_five.replace('%',''))
+    elif star == 4:
+        for film in films:
+            score += float(film.film_star_ratio_four.replace('%', ''))
+    elif star == 3:
+        for film in films:
+            score += float(film.film_star_ratio_three.replace('%', ''))
+    elif star == 2:
+        for film in films:
+            score += float(film.film_star_ratio_two.replace('%', ''))
+    elif star == 1:
+        for film in films:
+            score += float(film.film_star_ratio_one.replace('%', ''))
+    print(score)
+    print(total)
+    return score / total
+
+def get_actor_film_type_count(actor_id):
+    films = Films.query.filter_by(actor_id=actor_id)
+    db.session.close()
+    list_type = []
+    for film in films:
+        type = film.film_type
+        if type == '':
+            list_type.append('no')
+        else:
+            new_type = type.split(' ')[0:-1]
+            list_type = sorted(list(set(list_type).union(set(new_type))))
+    print(len(list_type))
+    print(list_type)
+    return len(list_type)
+
+@actor_blue.route('/get', methods=['POST', 'GET'])
+def init_actor_similarity_dataset():
+    """
+    性别、年龄段、平均电影评分、平均电影评论、获奖个数、电影部数、职业多样化、出生地、星座、
+    平均五星率、平均四星率、平均三星率、平均两星率、平均一星率、是否国际化、电影类型总数、每种类型占比
+    :return:
+    """
+    # 查询演员的所有信息
+    actors = db.session.query(Actors).all()
+    # 存放该演员的所有特征信息
+    list_actor_feature = []
+    # 特征名
+    feature_name = []
+    # 针对每个演员，获取以及计算中间可能需要的数据
+    for actor in actors:
+        # 存放该演员的所有特征信息
+        actor_feature = []
+        # 演员性别
+        actor_gender = actor.actor_gender
+        actor_feature.append(actor_gender)
+        # 演员年龄段
+        actor_age_group = get_actor_age_group(actor.actor_birthday)
+        actor_feature.append(actor_age_group)
+        # 演员平均电影评分
+        actor_avg_films_score = actor.actor_avg_films_score
+        actor_feature.append(actor_avg_films_score)
+        # 演员平均电影评论
+        actor_avg_comments_sum = actor.actor_avg_comments_sum
+        actor_feature.append(actor_avg_comments_sum)
+        # 演员获奖个数
+        actor_award_sum = db.session.query(func.count(Awards.id)).filter(Awards.actor_id == actor.actor_id).scalar()
+        actor_feature.append(actor_award_sum)
+        # 演员电影部数
+        actor_film_sum = db.session.query(func.count(Films.id)).filter(Films.actor_id == actor.actor_id).scalar()
+        actor_feature.append(actor_film_sum)
+        # 演员职业是否多样化
+        actor_multi_career = actor_is_multi_career(actor.actor_career)
+        actor_feature.append(actor_multi_career)
+        # 演员出生地，南、北方
+        actor_birthplace_faction = get_actor_faction(actor.actor_birthplace)
+        actor_feature.append(actor_birthplace_faction)
+        # 演员星座
+        actor_horoscope_code = get_actor_horoscope_code(actor.actor_horoscope)
+        actor_feature.append(actor_horoscope_code)
+        # 电影平均五星率
+        actor_film_avg_five_star = get_actor_film_avg_star(actor.actor_id, 5, actor_film_sum)
+        actor_feature.append(actor_film_avg_five_star)
+        # 电影平均四星率
+        actor_film_avg_four_star = get_actor_film_avg_star(actor.actor_id, 4, actor_film_sum)
+        actor_feature.append(actor_film_avg_four_star)
+        # 电影平均三星率
+        actor_film_avg_three_star = get_actor_film_avg_star(actor.actor_id, 3, actor_film_sum)
+        actor_feature.append(actor_film_avg_three_star)
+        # 电影平均两星率、平均一星率、是否国际化、电影类型总数、每种类型占比
+        actor_film_avg_two_star = get_actor_film_avg_star(actor.actor_id, 2, actor_film_sum)
+        actor_feature.append(actor_film_avg_two_star)
+        # 电影平均一星率
+        actor_film_avg_one_star = get_actor_film_avg_star(actor.actor_id, 1, actor_film_sum)
+        actor_feature.append(actor_film_avg_one_star)
+        # 是否国际化
+        actor_international = get_actor_is_international(actor.actor_id)
+        actor_feature.append(actor_international)
+        #电影类型总数
+        actor_film_type_sum = get_actor_film_type_count(actor.actor_id)
+        actor_feature.append(actor_film_type_sum)
+        # 每种类型占比
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        # actor_feature.append()
+        list_actor_feature.append(actor_feature)
+        print(actor_feature)

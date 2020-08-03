@@ -171,6 +171,9 @@ class Apriori:
 
 
 if __name__ == '__main__':
-    print('')
+    list1 = ['a','b','e','a','b','c']
+    list2 = ['a', 'b', 'd']
+    list3 = sorted(list(set(list1).union(set(list2))))
+    print(list3)
     # name = get_frequent_cooperation_by_id(cc, 1314124)
     # print(name)
