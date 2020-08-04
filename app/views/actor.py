@@ -56,16 +56,17 @@ def init_avg_info():
 
 
 @actor_blue.route('/getFilmTypeDistribution', methods=['POST', 'GET'])
-def get_film_type_distribution(time=0):
+def get_film_type_distribution(time=0, actor_id=0):
     """
     获取演员出演电影的类型分布
     :return:
     """
     if request.method == 'GET':
-        if 'moreButton' not in request.args.get('actor_id'):
-            actor_id = request.args.get('actor_id')
-        else:
-            actor_id = request.args.get('actor_id').replace('moreButton', '')
+        if request.args.get('actor_id'):
+            if 'moreButton' not in request.args.get('actor_id'):
+                actor_id = request.args.get('actor_id')
+            else:
+                actor_id = request.args.get('actor_id').replace('moreButton', '')
         # 根据演员的id去查询演员的电影
         if time != 0:
             film_info = Films.query.filter_by(actor_id=actor_id, film_year=time).all()
@@ -336,10 +337,10 @@ def get_actor_faction(actor_birthplace):
 
 
 def get_actor_horoscope_code(actor_horoscope):
-    list_horoscope = ['白羊座','金牛座','双子座','巨蟹座','狮子座','处女座','天秤座','天蝎座','射手座','摩羯座','水瓶座','双鱼座']
+    list_horoscope = ['白羊座', '金牛座', '双子座', '巨蟹座', '狮子座', '处女座', '天秤座', '天蝎座', '射手座', '摩羯座', '水瓶座', '双鱼座']
     for key, value in enumerate(list_horoscope):
         if value == actor_horoscope:
-            return key+1
+            return key + 1
 
 
 def get_actor_is_international(actor_id):
@@ -368,7 +369,7 @@ def get_actor_film_avg_star(actor_id, star, total):
     score = 0
     if star == 5:
         for film in films:
-            score += float(film.film_star_ratio_five.replace('%',''))
+            score += float(film.film_star_ratio_five.replace('%', ''))
     elif star == 4:
         for film in films:
             score += float(film.film_star_ratio_four.replace('%', ''))
@@ -381,9 +382,8 @@ def get_actor_film_avg_star(actor_id, star, total):
     elif star == 1:
         for film in films:
             score += float(film.film_star_ratio_one.replace('%', ''))
-    print(score)
-    print(total)
-    return score / total
+    return score / total / 100
+
 
 def get_actor_film_type_count(actor_id):
     films = Films.query.filter_by(actor_id=actor_id)
@@ -396,9 +396,34 @@ def get_actor_film_type_count(actor_id):
         else:
             new_type = type.split(' ')[0:-1]
             list_type = sorted(list(set(list_type).union(set(new_type))))
-    print(len(list_type))
-    print(list_type)
     return len(list_type)
+
+
+def get_actor_film_type_proportion(actor_id, actor_film_sum):
+    """
+    获得演员的电影类型占比表
+    :param actor_id: 演员id
+    :param actor_film_sum: 该演员的电影总数
+    :return: 类型分布表
+    """
+    type_dict = {'剧情': 0, '爱情': 0, '动作': 0, '科幻': 0, '冒险': 0, '悬疑': 0, '喜剧': 0, '惊悚': 0, '传记': 0,
+                 '动画': 0, '家庭': 0, '奇幻': 0, '武侠': 0, '灾难': 0, '歌舞': 0, '历史': 0, '音乐': 0, '短片': 0,
+                 '儿童': 0, '戏曲': 0, '犯罪': 0, '战争': 0, '西部': 0, '运动': 0, '真人秀': 0, '纪录片': 0, '脱口秀': 0,
+                 '古装': 0, '恐怖': 0, '情色': 0, '同性': 0, '无': 0
+                 }
+    final_dict = get_film_type_distribution(actor_id=actor_id)
+    for key, value in final_dict.items():
+        type_dict[value['type']] = value['count'] / actor_film_sum
+    print(len(type_dict))
+    print(type_dict)
+    return list(type_dict.values())
+
+
+film_type_c2e_dict = {'剧情': 'type_feature', '爱情': 'type_romance', '动作': 'type_action', '科幻': 'type_science', '冒险': 'type_adventure', '悬疑': 'type_suspense', '喜剧': 'type_comedy', '惊悚': 'type_thriller', '传记': 'type_biography',
+                      '动画': 'type_cartoon', '家庭': 'type_family', '奇幻': 'type_fantasy', '武侠': 'type_sowordsmen', '灾难': 'type_disaster', '歌舞': 'type_dance', '历史': 'type_history', '音乐': 'type_music', '短片': 'type_short',
+                      '儿童': 'type_children', '戏曲': 'type_opera', '犯罪': 'type_crime', '战争': 'type_war', '西部': 'type_western', '运动': 'type_sport', '真人秀': 'type_reality', '纪录片': 'type_documentary', '脱口秀': 'type_talkshow',
+                      '古装': 'type_costume', '恐怖': 'type_horror', '情色': 'type_blue', '同性': 'type_samesex', '无':'type_no'
+                      }
 
 @actor_blue.route('/get', methods=['POST', 'GET'])
 def init_actor_similarity_dataset():
@@ -412,11 +437,19 @@ def init_actor_similarity_dataset():
     # 存放该演员的所有特征信息
     list_actor_feature = []
     # 特征名
-    feature_name = []
+    feature_name = ['actor_id', 'actor_gender', 'actor_age_group', 'actor_avg_films_score', 'actor_avg_comments_sum',
+                    'actor_award_sum', 'actor_film_sum', 'actor_multi_career', 'actor_birthplace_faction', 'actor_horoscope_code',
+                    'actor_film_avg_five_star', 'actor_film_avg_four_star', 'actor_film_avg_three_star', 'actor_film_avg_two_star', 'actor_film_avg_one_star',
+                    'actor_international', 'actor_film_type_sum',
+                    'type_feature', 'type_romance', 'type_action', 'type_science', 'type_adventure', 'type_suspense', 'type_comedy', 'type_thriller', 'type_biography',
+                    'type_cartoon', 'type_family', 'type_fantasy', 'type_sowordsmen', 'type_disaster', 'type_dance', 'type_history', 'type_music', 'type_short',
+                    'type_children', 'type_opera', 'type_crime', 'type_war', 'type_western', 'type_sport', 'type_reality', 'type_documentary', 'type_talkshow',
+                    'type_costume', 'type_horror', 'type_blue', 'type_samesex', 'type_no']
     # 针对每个演员，获取以及计算中间可能需要的数据
     for actor in actors:
         # 存放该演员的所有特征信息
         actor_feature = []
+        actor_feature.append(actor.actor_id)
         # 演员性别
         actor_gender = actor.actor_gender
         actor_feature.append(actor_gender)
@@ -462,25 +495,13 @@ def init_actor_similarity_dataset():
         # 是否国际化
         actor_international = get_actor_is_international(actor.actor_id)
         actor_feature.append(actor_international)
-        #电影类型总数
+        # 电影类型总数
         actor_film_type_sum = get_actor_film_type_count(actor.actor_id)
         actor_feature.append(actor_film_type_sum)
         # 每种类型占比
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
-        # actor_feature.append()
+        actor_film_type_proportion = get_actor_film_type_proportion(actor.actor_id, actor_film_sum)
+        actor_feature.extend(actor_film_type_proportion)
+
         list_actor_feature.append(actor_feature)
-        print(actor_feature)
+    df = pd.DataFrame(list_actor_feature, columns=feature_name)
+    df.to_csv('/static/data/actor_similarity_data.csv', index=False)
