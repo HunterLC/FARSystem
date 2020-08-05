@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+from sklearn.preprocessing import Normalizer, MinMaxScaler
+from scipy.linalg import norm
 
 
 class Recommend:
@@ -6,33 +9,87 @@ class Recommend:
         self.current_ator = current_ator
         self.like_actors = like_actors
 
-    def compute_similarity(self):
-        return
+    def run(self):
+        df = self.init_data()
+        df = self.preprocess(df)
+        result1, result2 = self.compute_similarity(df)
+        return result1, result2
+
+    def compute_similarity(self, df):
+        result1 = []
+        result2 = []
+        current = df.loc[18].values
+        for index, row in df.iterrows():
+            # 余弦相似度
+            row = row.values
+            score = np.dot(current, row) / (norm(current) * norm(row))
+            # 欧式距离
+            # 方法一
+            distance = np.sqrt(np.sum(np.square(current - row)))
+            result1.append(score)
+            result2.append(distance)
+        return result1, result2
 
     def recommend_actor(self):
         return
 
-    def init_data(self):
-        return
+    def preprocess(self, df):
+        # 特征预处理
+        # step1：将object编码
+        obj_attrs = []
+        feature_attr = df.columns.tolist()
+        feature_attr.remove('actor_id')
+        for attr in feature_attr:
+            # 添加离散数据列
+            if df.dtypes[attr] == np.dtype(object):
+                obj_attrs.append(attr)
+        if len(obj_attrs) > 0:
+            # 转为哑变量
+            df = pd.get_dummies(df, columns=obj_attrs)
+        # step2: 行
+        df_id = df['actor_id']
+        df.drop(['actor_id'], axis=1, inplace=True)
+        # 行归一化
+        # df = Normalizer().fit_transform(df)
 
-def init_actor_similarity_dataset():
-    """
-    性别、年龄段、平均电影评分、平均电影评论、获奖个数、电影部数、职业多样化、出生地、星座、
-    平均五星率、平均四星率、平均三星率、平均两星率、平均一星率、是否国际化、电影类型总数、每种类型占比
-    :return:
-    """
-    # # 查询演员的所有信息
-    # actors = db.session.query(Actors).all()
-    # # 针对每个演员，获取以及计算中间可能需要的数据
-    # for actor in actors:
-    #     dd
-    list_l = [[1, 3, 3, 5, 4], [11, 7, 15, 13, 9], [4, 2, 7, 9, 3], [15, 11, 12, 6, 11]]
-    df = pd.DataFrame(list_l, columns=['a', 'b', 'c', 'd', 'e'],)
-    print(df)
-    df.to_csv('G:/我是测试.csv',index=False)
+        # 全局0-1区间变换
+        # new = MinMaxScaler().fit_transform(df.values)
+        # df_new = pd.DataFrame(new)  # 将array转化为dataframe
+        # df_new.columns = df.columns  # 命名标题行
 
+        # 部分数据0-1规范化 actor_avg_films_score, actor_avg_comments_sum, actor_award_sum, actor_film_sum, actor_film_type_sum
+        df['actor_avg_films_score'] = df['actor_avg_films_score'].apply(
+            lambda x: (x - df['actor_avg_films_score'].min())/(
+                        df['actor_avg_films_score'].max() - df['actor_avg_films_score'].min()))
+        df['actor_avg_comments_sum'] = df['actor_avg_comments_sum'].apply(
+            lambda x: (x - df['actor_avg_comments_sum'].min()) / (
+                        df['actor_avg_comments_sum'].max() - df['actor_avg_comments_sum'].min()))
+        df['actor_award_sum'] = df['actor_award_sum'].apply(
+            lambda x: (x - df['actor_award_sum'].min()) / (
+                        df['actor_award_sum'].max() - df['actor_award_sum'].min()))
+        df['actor_film_sum'] = df['actor_film_sum'].apply(
+            lambda x: (x - df['actor_film_sum'].min()) / (
+                        df['actor_film_sum'].max() - df['actor_film_sum'].min()))
+        df['actor_film_type_sum'] = df['actor_film_type_sum'].apply(
+            lambda x: (x - df['actor_film_type_sum'].min()) / (
+                        df['actor_film_type_sum'].max() - df['actor_film_type_sum'].min()))
+
+        return df
+
+    def init_data(self, data_path='../static/data/actor_similarity_data.csv'):
+        df = pd.read_csv(data_path)
+        return df
 
 
 if __name__ == '__main__':
-    print("hahaha")
-    init_actor_similarity_dataset()
+    result1, result2 = Recommend(5, 6).run()
+    print(result1)
+    print(result2)
+    result1 = np.array(result1)
+    result2 = np.array(result2)
+    np.sort(result1)
+    np.sort(result2)
+    print(np.argsort(-result1))  # 逆序输出索引，从大到小,余弦相似度越大越相似
+    print(np.argsort(result2))  # 正序输出索引，从小到大，欧式距离越小越相似
+
+

@@ -340,7 +340,7 @@ def get_actor_horoscope_code(actor_horoscope):
     list_horoscope = ['白羊座', '金牛座', '双子座', '巨蟹座', '狮子座', '处女座', '天秤座', '天蝎座', '射手座', '摩羯座', '水瓶座', '双鱼座']
     for key, value in enumerate(list_horoscope):
         if value == actor_horoscope:
-            return key + 1
+            return 'type_'+str(key + 1)
 
 
 def get_actor_is_international(actor_id):
@@ -504,4 +504,4 @@ def init_actor_similarity_dataset():
 
         list_actor_feature.append(actor_feature)
     df = pd.DataFrame(list_actor_feature, columns=feature_name)
-    df.to_csv('/static/data/actor_similarity_data.csv', index=False)
+    df.to_csv(r'E:\PythonCode\FARSystem\static\data\actor_similarity_data.csv', index=False)
