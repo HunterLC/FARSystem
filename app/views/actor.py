@@ -3,7 +3,7 @@ import math
 import os
 import datetime
 import requests
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, redirect, url_for, session
 from flask import request
 from flask import render_template
 from sqlalchemy import func, and_
@@ -17,6 +17,30 @@ import numpy as np
 
 actor_blue = Blueprint('actor', __name__)
 
+
+@actor_blue.route('/', methods=['GET', 'POST'])
+def start():
+    if session.get("isLogin") is True and session.get("username") is not None:
+        if request.method == 'GET':
+            if request.args.get('actor_c_name'):
+                name = request.args.get('actor_c_name')
+                actors = db.session.query(Actors).filter(Actors.actor_c_name.like('%' + name + '%')).order_by(
+                    Actors.actor_c_name).all()
+            else:
+                actors = db.session.query(Actors).order_by(Actors.actor_c_name).all()
+            db.session.close()
+            for actor in actors:
+                actor.actor_img = actor.actor_img.split('/')[-1]
+            return render_template("start.html", Actors=actors)
+        else:
+            actors = db.session.query(Actors).order_by(Actors.actor_c_name).all()
+            db.session.close()
+            for actor in actors:
+                actor.actor_img = actor.actor_img.split('/')[-1]
+            return render_template("start.html", Actors=actors)
+
+    else:
+        return redirect(url_for('login'), code=302)
 
 @actor_blue.route('/init-info')
 def init_avg_info():

@@ -11,6 +11,7 @@ from app.views.film import film_blue
 
 def init_app():
     app = Flask(__name__, template_folder='../templates', static_folder='../static')
+    app.secret_key = "liu_chang98hunter_lc25"
 
     app.config.from_object('settings.DevelopmentConfig')
 

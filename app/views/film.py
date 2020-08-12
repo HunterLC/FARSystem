@@ -6,21 +6,19 @@ from flask import request
 from flask import render_template
 from .. import db
 from ..models import Actors, Awards, Films
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, text
 
 film_blue = Blueprint('film', __name__)
 
 
 @film_blue.route('/', methods=['POST', 'GET'])
-def start(page=1):
+def start(page=1, value="film_year"):
     if request.method == 'GET':
         if not request.args.get('page') and not request.args.get('film_type') and not request.args.get(
-                'film_year') and not request.args.get('search'):
+                'film_year') and not request.args.get('search') and not request.args.get('sorted_by'):
             paginate_films = get_all_films(page=page)
-            print("111")
-            return render_template('film.html', Films=paginate_films)
+            return render_template('film.html', Films=paginate_films,value=value)
         else:
-            print("222")
             # 前端传过来的id格式中含有前缀moreButton
             if request.args.get('page'):
                 page = int(request.args.get('page'))
@@ -40,23 +38,28 @@ def start(page=1):
                 print(request.args.get('search'))
             else:
                 search = ""
-            paginate_films = get_all_films(page=page, film_year=film_year, film_type=film_type, search=search)
+            if request.args.get('sorted_by'):
+                value = request.args.get('sorted_by')
+                print(request.args.get('sorted_by'))
+            else:
+                value = "film_year"
+            paginate_films = get_all_films(page=page, film_year=film_year, film_type=film_type, search=search, value=value)
             return render_template('film.html', film_type=film_type, film_year=film_year, search=search,
-                                   Films=paginate_films)
+                                   Films=paginate_films, value=value)
 
 
-def get_all_films(page=1, pre_page=30, film_year=0, film_type="", search=""):
+def get_all_films(page=1, pre_page=30, film_year=0, film_type="", search="", value="film_year"):
     if film_year != 0 and film_year != "":
         paginate_films = Films.query.filter(
             and_(Films.film_type.like('%' + film_type + '%'), Films.film_year == film_year,
                  or_(Films.film_name.like('%' + search + '%'),
-                     Films.film_protagonist.like('%' + search + '%')))).paginate(page,
+                     Films.film_protagonist.like('%' + search + '%')))).order_by(text("-"+value)).paginate(page,
                                                                                  pre_page)
     else:
         paginate_films = Films.query.filter(
             and_(Films.film_type.like('%' + film_type + '%'),
                  or_(Films.film_name.like('%' + search + '%'),
-                     Films.film_protagonist.like('%' + search + '%')))).paginate(page,
+                     Films.film_protagonist.like('%' + search + '%')))).order_by(text("-"+value)).paginate(page,
                                                                                  pre_page)
     db.session.close()
     for film in paginate_films.items:

@@ -174,7 +174,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ url_for('start') }}" class="nav-link">
+                                <a href="{{ url_for('actor.start') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>演员列表</p>
                                 </a>
@@ -228,56 +228,57 @@
             <div class="container-fluid">
                 <!-- Default box -->
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>电影种类</label>
                             <div class="select2-blue">
                                 <select id="typeSelect" class="select2" multiple="multiple" data-placeholder="选择电影类型"
                                         style="width: 100%;">
-                                    <option>剧情 </option>
-                                    <option>爱情 </option>
-                                    <option>动作 </option>
-                                    <option>科幻 </option>
-                                    <option>冒险 </option>
-                                    <option>悬疑 </option>
-                                    <option>喜剧 </option>
-                                    <option>惊悚 </option>
-                                    <option>传记 </option>
-                                    <option>动画 </option>
-                                    <option>家庭 </option>
-                                    <option>奇幻 </option>
-                                    <option>武侠 </option>
-                                    <option>灾难 </option>
-                                    <option>歌舞 </option>
-                                    <option>历史 </option>
-                                    <option>音乐 </option>
-                                    <option>短片 </option>
-                                    <option>儿童 </option>
-                                    <option>古装 </option>
-                                    <option>恐怖 </option>
-                                    <option>情色 </option>
-                                    <option>同性 </option>
-                                    <option>戏曲 </option>
-                                    <option>犯罪 </option>
-                                    <option>战争 </option>
-                                    <option>西部 </option>
-                                    <option>运动 </option>
-                                    <option>真人秀 </option>
-                                    <option>纪录片 </option>
-                                    <option>脱口秀 </option>
+                                    <option>剧情</option>
+                                    <option>爱情</option>
+                                    <option>动作</option>
+                                    <option>科幻</option>
+                                    <option>冒险</option>
+                                    <option>悬疑</option>
+                                    <option>喜剧</option>
+                                    <option>惊悚</option>
+                                    <option>传记</option>
+                                    <option>动画</option>
+                                    <option>家庭</option>
+                                    <option>奇幻</option>
+                                    <option>武侠</option>
+                                    <option>灾难</option>
+                                    <option>歌舞</option>
+                                    <option>历史</option>
+                                    <option>音乐</option>
+                                    <option>短片</option>
+                                    <option>儿童</option>
+                                    <option>古装</option>
+                                    <option>恐怖</option>
+                                    <option>情色</option>
+                                    <option>同性</option>
+                                    <option>戏曲</option>
+                                    <option>犯罪</option>
+                                    <option>战争</option>
+                                    <option>西部</option>
+                                    <option>运动</option>
+                                    <option>真人秀</option>
+                                    <option>纪录片</option>
+                                    <option>脱口秀</option>
                                 </select>
                             </div>
 
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label>电影年份</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-clock"></i></span>
                                 </div>
-                                <input type="text" class="form-control float-right" id="timeSearch" value="{{ film_year }}">
+                                <input type="text" class="form-control float-right" id="timeSearch"
+                                       value="{{ film_year }}">
                             </div>
                             <!-- /.input group -->
                         </div>
@@ -297,6 +298,27 @@
                                     </button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <!-- radio -->
+                        <div class="form-group">
+                            <label>排序</label>
+                            <div class="row">
+                                <div class="custom-control custom-radio col-md-5">
+                                    <input class="custom-control-input" type="radio" id="customRadio1" value="film_year"
+                                           name="customRadioSort"
+                                           checked="">
+                                    <label for="customRadio1" class="custom-control-label">年份降序</label>
+                                </div>
+                                <div class="col-md-2"></div>
+                                <div class="custom-control custom-radio col-md-5">
+                                    <input class="custom-control-input" type="radio" id="customRadio2"
+                                           name="customRadioSort" value="film_score">
+                                    <label for="customRadio2" class="custom-control-label">评分降序</label>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -357,7 +379,7 @@
                                     {% if page %}
                                         {% if page !=Films.page %}
                                             <li class="page-item"><a class="page-link"
-                                                                     href="{{ url_for('film.start',page=page, film_year=film_year, film_type=film_type, search=search) }}">{{ page }}</a>
+                                                                     href="{{ url_for('film.start',page=page, film_year=film_year, film_type=film_type, search=search,sorted_by=value) }}">{{ page }}</a>
                                             </li>
                                         {% else %}
                                             <li class="page-item active"><a class="page-link"
@@ -416,10 +438,15 @@
         let typeSelect = $("#typeSelect option:selected").text(); //电影类型
         let timeSelect = $("#timeSearch").val();//电影上映时间
         let inputContent = $("#filmSearchContent").val();//搜索内容
-        console.log(typeSelect);
-        console.log(timeSelect);
-        console.log(inputContent);
-        window.location.href = "{{ url_for('film.start') }}" + "?film_type="+typeSelect+"&film_year="+timeSelect+"&search="+inputContent;
+        let radioSelect = document.getElementsByName("customRadioSort");
+        var value = "";
+        for(var i=0;i<radioSelect.length;i++){
+                if(radioSelect[i].checked === true){
+                    value = radioSelect[i].value;
+                    break;
+                }
+            }
+        window.location.href = "{{ url_for('film.start') }}" + "?film_type=" + typeSelect + "&film_year=" + timeSelect + "&search=" + inputContent + "&sorted_by=" + value;
     }
 </script>
 <script>
@@ -438,11 +465,20 @@
         });
         $("#typeSelect option").each(function () {
             let txt = $(this).text();
-            str = "{{ film_type }}"+" ";
-            if(str.search(txt) !== -1 ){
-                $(this).attr("selected","selected")
+            str = "{{ film_type }}" + " ";
+            if (str.search(txt) !== -1) {
+                $(this).attr("selected", "selected")
             }
         });
+        let radioSelect = document.getElementsByName("customRadioSort");
+        for(var i=0;i<radioSelect.length;i++){
+                if(radioSelect[i].value === "{{ value }}"){
+                    radioSelect[i].checked = true;
+                    break;
+                }else{
+                    radioSelect[i].checked = false;
+                }
+        }
     })
 </script>
 </body>
