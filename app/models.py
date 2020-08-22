@@ -1,3 +1,5 @@
+import random
+
 from . import db
 
 
@@ -106,4 +108,63 @@ class Films(db.Model):
             'film_star_ratio_three': self.film_star_ratio_three,
             'film_star_ratio_two': self.film_star_ratio_two,
             'film_star_ratio_one': self.film_star_ratio_one
+        }
+
+
+class Users(db.Model):
+    """
+    用户表
+    """
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer)
+    user_name = db.Column(db.String(255))
+    user_email = db.Column(db.String(64))
+    user_gender = db.Column(db.String(10))
+    user_password = db.Column(db.String(64))
+    user_image = db.Column(db.String(255))
+    user_desc = db.Column(db.String(255))
+
+    def __init__(self, user_name, user_email, user_password):
+        self.user_id = random.randint(100000, 999999)
+        self.user_name = user_name
+        self.user_email = user_email
+        self.user_gender = 'unknow'
+        self.user_password = user_password
+        self.user_image = r'\static\dist\img\user4-128x128.jpg'
+        self.user_desc = 'FAR'
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'user_name': self.user_name,
+            'user_email': self.user_email,
+            'user_gender': self.user_gender,
+            'user_password': self.user_password,
+            'user_image': self.user_image,
+            'user_desc': self.user_desc
+        }
+
+
+class Likes(db.Model):
+    """
+    用户喜爱演员表
+    """
+    __tablename__ = 'likes'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer)
+    actor_id = db.Column(db.Integer)
+
+    def __init__(self, user_id, actor_id):
+        self.user_id = user_id
+        self.actor_id = actor_id
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'actor_id': self.actor_id
         }

@@ -11,7 +11,7 @@ from sqlalchemy import func, and_
 from .film import get_films_by_actor_id
 from .. import db
 from ..apriori import Apriori
-from ..models import Actors, Awards, Films
+from ..models import Actors, Awards, Films, Likes
 import pandas as pd
 import numpy as np
 
@@ -28,16 +28,24 @@ def start():
                     Actors.actor_c_name).all()
             else:
                 actors = db.session.query(Actors).order_by(Actors.actor_c_name).all()
-            db.session.close()
             for actor in actors:
                 actor.actor_img = actor.actor_img.split('/')[-1]
-            return render_template("start.html", Actors=actors)
+            likes = db.session.query(Likes).filter(Likes.user_id==session.get("userid")).all()
+            db.session.close()
+            like_list = []
+            for like in likes:
+                like_list.append(like.actor_id)
+            return render_template("start.html", Actors=actors, Session=session, Likes=like_list)
         else:
             actors = db.session.query(Actors).order_by(Actors.actor_c_name).all()
+            likes = db.session.query(Likes).filter(Likes.user_id == session.get("userid")).all()
             db.session.close()
             for actor in actors:
                 actor.actor_img = actor.actor_img.split('/')[-1]
-            return render_template("start.html", Actors=actors)
+            like_list = []
+            for like in likes:
+                like_list.append(like.actor_id)
+            return render_template("start.html", Actors=actors, Session=session, Likes=like_list)
 
     else:
         return redirect(url_for('login'), code=302)
@@ -315,7 +323,7 @@ def get_actor_info():
         colorful = ['bg-primary', 'bg-pink', 'bg-warning', 'bg-info', 'bg-purple', 'bg-success', 'bg-danger']
         return render_template('actorinfo.html', Films=films, FilmType=film_type, Color=colorful, Award=award_info,
                                avatar=avatar, age=age, Chinese_name=Chinese_name,
-                               English_name=English_name, Actor=actor_info, frequent_cooperation=frequent_cooperation)
+                               English_name=English_name, Actor=actor_info, frequent_cooperation=frequent_cooperation, Session=session)
 
 
 def get_actor_age_group(actor_birthday):

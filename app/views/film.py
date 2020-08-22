@@ -1,7 +1,7 @@
 import os
 
 import requests
-from flask import Blueprint
+from flask import Blueprint, session
 from flask import request
 from flask import render_template
 from .. import db
@@ -17,7 +17,7 @@ def start(page=1, value="film_year"):
         if not request.args.get('page') and not request.args.get('film_type') and not request.args.get(
                 'film_year') and not request.args.get('search') and not request.args.get('sorted_by'):
             paginate_films = get_all_films(page=page)
-            return render_template('film.html', Films=paginate_films,value=value)
+            return render_template('film.html', Films=paginate_films,value=value, Session=session)
         else:
             # 前端传过来的id格式中含有前缀moreButton
             if request.args.get('page'):
@@ -45,7 +45,7 @@ def start(page=1, value="film_year"):
                 value = "film_year"
             paginate_films = get_all_films(page=page, film_year=film_year, film_type=film_type, search=search, value=value)
             return render_template('film.html', film_type=film_type, film_year=film_year, search=search,
-                                   Films=paginate_films, value=value)
+                                   Films=paginate_films, value=value, Session=session)
 
 
 def get_all_films(page=1, pre_page=30, film_year=0, film_type="", search="", value="film_year"):
@@ -121,4 +121,4 @@ def get_film_info():
         film_info = Films.query.filter_by(film_id=film_id).all()[0]
         db.session.close()
         film_info.film_img =  film_info.film_img.split('/')[-1]
-        return render_template('filminfo.html',Film=film_info)
+        return render_template('filminfo.html',Film=film_info, Session=session)
