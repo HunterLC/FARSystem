@@ -1,3 +1,5 @@
+from math import sqrt
+
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import Normalizer, MinMaxScaler
@@ -5,8 +7,8 @@ from scipy.linalg import norm
 
 
 class Recommend:
-    def __init__(self, data_path='../static/data/actor_similarity_data.csv', current_actor=0, like_actors=None,
-                 input_dict=None, sim_algorithm=0, top_k=3, user_id=None, users_like=None):
+    def __init__(self, data_path=r'E:\PythonCode\FARSystem\static\data\actor_similarity_data.csv', current_actor=0, like_actors=None,
+                 input_dict=None, sim_algorithm=0, top_k_user=3, top_k_actor=3, user_id=None, users_like=None):
         # 当前演员id
         self.current_actor = int(current_actor)
         # 当前用户喜欢的演员id列表
@@ -19,16 +21,33 @@ class Recommend:
         self.feature_dict = input_dict
         # 相似度算法，默认为余弦相似度
         self.algorithm = sim_algorithm
-        self.top_k = top_k
+        self.top_k_user = top_k_user
+        self.top_k_actor = top_k_actor
         self.user = user_id
         self.users_like = users_like
 
     def run(self):
         df = self.init_data()
         df = self.preprocess(df)
-        result_dict = self.recommend_actor(df)
+        result_dict = self.collaborative_filtering_recommend(df)
+        # result_dict = self.recommend_actor(df)
+        return result_dict
 
-        # return result1, result2
+    def compute_2_actors(self, df, actor_1, actor_2):
+        # 根据当前用户的id获得其在列表中的索引
+        index_1 = self.df_id[self.df_id.values == int(actor_1)].index[0]
+        current_1 = df.loc[index_1].values
+        index_2 = self.df_id[self.df_id.values == int(actor_2)].index[0]
+        current_2 = df.loc[index_2].values
+        sim_score = 0
+        # 余弦相似度
+        if self.algorithm == 0:
+            sim_score = np.dot(current_1, current_2) / (norm(current_1) * norm(current_2))
+        # 欧式距离
+        elif self.algorithm == 1:
+            sim_score = np.sqrt(np.sum(np.square(current_1 - current_2)))
+        return sim_score
+
 
     def cal_actor_similarity(self, df):
         # 相似度分数
@@ -248,6 +267,74 @@ class Recommend:
         print(item_user)
         return item_user
 
+    def collaborative_filtering_recommend(self, df):
+        """
+        协同过滤推荐
+        :return:
+        """
+        # 用户相似度分数
+        user_item, sim_user = self.cal_user_similarity()
+        self.like_actors = user_item[str(self.user)]
+        print('当前用户{}'.format(str(self.user)))
+        print(self.like_actors)
+        # 当前用户的id
+        if str(self.user) not in sim_user.keys():
+            # 当前用户没有与之相似的用户，初始化是一个问题
+            print('当前用户没有与之相似的用户，初始化是一个问题')
+            return 0
+        else:
+            # 当前用户存在与之相似的用户
+            similarity_value = sim_user[str(self.user)]
+
+            if len(similarity_value) >= self.top_k_user:
+                # 相似的用户数量足够时，返回top_k个相似user
+                print('相似的用户数量足够，返回{}个相似user'.format(str(self.top_k_user)))
+                similarity_value = dict(sorted(similarity_value.items(), key=lambda item: item[1], reverse=True)[
+                                        :self.top_k_user])
+
+            print(similarity_value)
+            # 寻找相似用户中，当前用户没有喜欢的物品
+            all_like_item = []
+            for key, value in similarity_value.items():
+                # 对于每一个相似的用户,获取其喜欢的物品
+                all_like_item.extend(user_item[key])
+            # 当前用户喜欢的物品
+            curr_like_item = user_item[str(self.user)]
+            # 当前用户可能感兴趣的物品
+            unlike_item = list(set(all_like_item)-set(curr_like_item))
+            print(unlike_item)
+            # 对每一个可能感兴趣的物品，计算推荐分数
+            item_score = {}
+            for item in unlike_item:
+                # 计算平均用户相似度分数
+                user_score = 0
+                user_count = 0
+                for key_1 in similarity_value.keys():
+                    if item in user_item[key_1]:
+                        user_score += similarity_value[key_1]
+                        user_count += 1
+                user_score = user_score / user_count
+                print(str(user_score))
+                # 计算平均演员相似度分数
+                actor_score = 0
+                for key_2 in self.like_actors:
+                    actor_score += self.compute_2_actors(df, key_2, item)
+                actor_score = actor_score / len(self.like_actors)
+                print(str(actor_score))
+
+                # 推荐分数计算
+                recommend_score = user_score * actor_score
+                item_score[item] = recommend_score
+
+            if len(item_score.keys()) >= self.top_k_actor:
+                # 可能感兴趣的数量足够时，返回top_k个actor
+                item_score = dict(sorted(item_score.items(), key=lambda item: item[1], reverse=True)[
+                                        :self.top_k_actor])
+            else:
+                item_score = dict(sorted(item_score.items(), key=lambda item: item[1], reverse=True))
+            print(item_score)
+            return item_score
+
     def cal_user_similarity(self):
         """
         计算用户相似度
@@ -265,10 +352,10 @@ class Recommend:
         user_sum = len(user_list)
         print('用户表')
         print(user_list)
-        for index_f in range(0,user_sum-1):
-            print(user_list[index_f])
-            for index_s in range(index_f+1, user_sum):
-                print(user_list[index_s])
+
+        # 用户间相同喜欢计数
+        for index_f in range(0, user_sum - 1):
+            for index_s in range(index_f + 1, user_sum):
                 if user_list[index_f] not in sim_user.keys():
                     sim_user[user_list[index_f]] = {}
                 for key, value in item_user.items():
@@ -279,12 +366,21 @@ class Recommend:
                         sim_user[user_list[index_f]][user_list[index_s]] += 1
                         # M[x][y] 值和 M[y][x] 一样
                         if user_list[index_s] not in sim_user.keys():
-                            sim_user[user_list[index_s]]={}
-                        sim_user[user_list[index_s]][user_list[index_f]] = sim_user[user_list[index_f]][user_list[index_s]]
+                            sim_user[user_list[index_s]] = {}
+                        sim_user[user_list[index_s]][user_list[index_f]] = sim_user[user_list[index_f]][
+                            user_list[index_s]]
         print('相似计数表')
         print(sim_user)
-        return sim_user
 
+        # 相似度计算
+        for sim_key_f, sim_value_f in sim_user.items():
+            for sim_key_s, sim_value_s in sim_value_f.items():
+                # 假如A喜欢[1,2,3],B喜欢[1，3，4]，那么A和B的相似度为 2/sqrt(3*3)，2为相同元素的个数，3为A和B各自喜欢的总数
+                sim_user[sim_key_f][sim_key_s] = sim_user[sim_key_f][sim_key_s] / sqrt(
+                    len(user_item[sim_key_f]) * len(user_item[sim_key_s]))
+        print('相似分数表')
+        print(sim_user)
+        return user_item, sim_user
 
 
 if __name__ == '__main__':

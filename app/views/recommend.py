@@ -14,7 +14,19 @@ recommend_blue = Blueprint('recommend', __name__)
 @recommend_blue.route('/', methods=['GET', 'POST'])
 def start():
     if request.method == "GET":
-        return render_template("recommend.html")
+        likes = db.session.query(Likes).all()
+        user_item = Recommend(sim_algorithm=0, top_k_user=3, top_k_actor=3, user_id=session['userid'],
+                              users_like=likes).run()
+        # 猜你喜欢
+        guess_actor = []
+        for key, value in user_item.items():
+            actor = db.session.query(Actors).filter(Actors.actor_id == int(key)).all()[0]
+            guess_actor.append(actor)
+        db.session.close()
+        for guess in guess_actor:
+            guess.actor_c_name = guess.actor_c_name.split(' ')[0]
+            guess.actor_img = guess.actor_img.split('/')[-1]
+        return render_template("recommend.html",Guess=guess_actor)
 
 
 @recommend_blue.route('/recommendActor', methods=['GET', 'POST'])
@@ -64,7 +76,8 @@ def recommend_actor():
         # 平均评论数
         actor_avg_comments_sum = request.args.get('range_avg_comments')
         feature_dict['actor_avg_comments_sum'] = actor_avg_comments_sum
-        Recommend(r'E:\PythonCode\FARSystem\static\data\actor_similarity_data.csv', current_actor=1314124, like_actors=[1314124], input_dict=feature_dict).run()
+        Recommend(r'E:\PythonCode\FARSystem\static\data\actor_similarity_data.csv', current_actor=1314124,
+                  like_actors=[1314124], input_dict=feature_dict).run()
         return {'data': feature_dict}
 
 
@@ -72,5 +85,6 @@ def recommend_actor():
 def a():
     likes = db.session.query(Likes).all()
     db.session.close()
-    user_item = Recommend(users_like=likes).cal_user_similarity()
+    user_item = Recommend(sim_algorithm=0, top_k_user=3, top_k_actor=3, user_id=session['userid'],
+                          users_like=likes).run()
     return user_item
