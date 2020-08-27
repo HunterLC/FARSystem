@@ -15,6 +15,8 @@ from ..models import Actors, Awards, Films, Likes
 import pandas as pd
 import numpy as np
 
+from ..recommend import Recommend
+
 actor_blue = Blueprint('actor', __name__)
 
 
@@ -297,7 +299,6 @@ def get_actor_info():
         actor_id = request.args.get('actor_id').replace('moreButton', '')
         # 根据演员的id去查询演员的基本信息
         actor_info = Actors.query.filter_by(actor_id=actor_id).all()[0]
-        db.session.close()
         # 演员中文名
         Chinese_name = actor_info.actor_c_name.split(' ')[0]
         # 演员英文名
@@ -321,9 +322,28 @@ def get_actor_info():
         # 演员的电影信息
         films = get_films_by_actor_id()
         colorful = ['bg-primary', 'bg-pink', 'bg-warning', 'bg-info', 'bg-purple', 'bg-success', 'bg-danger']
+        likes = db.session.query(Likes).filter(Likes.user_id == session.get("userid")).all()
+        like_list = []
+        for like in likes:
+            like_list.append(like.actor_id)
+
+        result = Recommend(r'E:\PythonCode\FARSystem\static\data\actor_similarity_data.csv', current_actor=actor_id).run()
+        # 猜你喜欢
+        guess_actor = []
+        for key, value in result.items():
+            actor = db.session.query(Actors).filter(Actors.actor_id == int(key)).all()[0]
+            guess_actor.append(actor)
+        db.session.close()
+        result_dict = {}
+        for guess in guess_actor:
+            result_dict[str(guess.actor_id)] = {}
+            result_dict[str(guess.actor_id)]['img'] = guess.actor_img.split('/')[-1]
+            result_dict[str(guess.actor_id)]['name'] = guess.actor_c_name.split(' ')[0]
+        print(result_dict)
         return render_template('actorinfo.html', Films=films, FilmType=film_type, Color=colorful, Award=award_info,
                                avatar=avatar, age=age, Chinese_name=Chinese_name,
-                               English_name=English_name, Actor=actor_info, frequent_cooperation=frequent_cooperation, Session=session)
+                               English_name=English_name, Actor=actor_info, frequent_cooperation=frequent_cooperation,
+                               Session=session, Likes=like_list, Similarity=result_dict)
 
 
 def get_actor_age_group(actor_birthday):

@@ -16,7 +16,7 @@ def start():
     if request.method == "GET":
         likes = db.session.query(Likes).all()
         user_item = Recommend(sim_algorithm=0, top_k_user=3, top_k_actor=3, user_id=session['userid'],
-                              users_like=likes).run()
+                              users_like=likes).run_collaborative_filtering()
         # 猜你喜欢
         guess_actor = []
         for key, value in user_item.items():
@@ -26,7 +26,7 @@ def start():
         for guess in guess_actor:
             guess.actor_c_name = guess.actor_c_name.split(' ')[0]
             guess.actor_img = guess.actor_img.split('/')[-1]
-        return render_template("recommend.html",Guess=guess_actor)
+        return render_template("recommend.html", Guess=guess_actor)
 
 
 @recommend_blue.route('/recommendActor', methods=['GET', 'POST'])
@@ -76,9 +76,26 @@ def recommend_actor():
         # 平均评论数
         actor_avg_comments_sum = request.args.get('range_avg_comments')
         feature_dict['actor_avg_comments_sum'] = actor_avg_comments_sum
-        Recommend(r'E:\PythonCode\FARSystem\static\data\actor_similarity_data.csv', current_actor=1314124,
+        result = Recommend(r'E:\PythonCode\FARSystem\static\data\actor_similarity_data.csv', current_actor=1314124,
                   like_actors=[1314124], input_dict=feature_dict).run()
-        return {'data': feature_dict}
+        # 猜你喜欢
+        guess_actor = []
+        for key, value in result.items():
+            actor = db.session.query(Actors).filter(Actors.actor_id == int(key)).all()[0]
+            guess_actor.append(actor)
+        db.session.close()
+        result_list = {}
+        i = 1
+        for guess in guess_actor:
+            result_dict = {}
+            result_dict[str(guess.actor_id)] = {}
+            result_dict[str(guess.actor_id)]['img'] = guess.actor_img.split('/')[-1]
+            result_dict[str(guess.actor_id)]['name'] = guess.actor_c_name.split(' ')[0]
+            result_list[str(i)] = result_dict
+            print(result_dict)
+            i += 1
+        print(result_list)
+        return result_list
 
 
 @recommend_blue.route('/a', methods=['GET', 'POST'])

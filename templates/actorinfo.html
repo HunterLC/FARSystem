@@ -187,11 +187,24 @@
                                      style="background: url('/static/dist/img/photo1.png') center center;">
                                     <h3 class="widget-user-username text-right">{{ Chinese_name }}</h3>
                                     <h5 class="widget-user-desc text-right">{{ English_name }}</h5>
+                                    <div class="text-right">
+                                        {% if Actor.actor_id in Likes %}
+                                            <i id="likeButton{{ Actor.actor_id }}"
+                                               class="btn btn-default bg-transparent border-0 fas fa-heart fa-sm mr-2"
+                                               style="color: red" onclick="likeActors(this);"></i>
+                                        {% else %}
+                                            <i id="likeButton{{ Actor.actor_id }}"
+                                               class="btn btn-default bg-transparent border-0 fas fa-heart fa-sm mr-2"
+                                               style="color: white" onclick="likeActors(this);"></i>
+                                        {% endif %}
+                                        喜欢
+                                    </div>
                                 </div>
                                 <div class="widget-user-image">
                                     <img class="img-circle" src="/static/image/actor/{{ avatar }}" alt="User Avatar">
                                 </div>
                                 <div class="card-footer">
+
                                     <div class="row">
                                         <div class="col-sm-4 border-right">
                                             <div class="description-block">
@@ -221,6 +234,7 @@
                                         <!-- /.col -->
                                     </div>
                                     <!-- /.row -->
+
                                     <!-- About Me Box -->
                                     <div class="bg-transparent">
                                         <div class="card-header">
@@ -293,6 +307,9 @@
                                                             data-toggle="tab">获奖信息({{ Award.count }})</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#settings"
                                                             data-toggle="tab">电影列表({{ Films|length }})</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#similarity"
+                                                            data-toggle="tab">相似演员</a>
+                                    </li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -477,8 +494,25 @@
                                             {% endfor %}
 
                                         </div>
-
-
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="similarity">
+                                        <div class="row">
+                                            {% for key, value in Similarity.items() %}
+                                            <div class="col-md-4">
+                                                <img alt="Avatar" class="img-fluid img-rounded"
+                                                     src="/static/image/actor/{{ value.img }}">
+                                                <div class="ribbon-wrapper">
+                                                    <div class="ribbon bg-danger text-sm">
+                                                        {{ loop.index }}
+                                                    </div>
+                                                </div>
+                                                <div class="text-center">
+                                                    <a href="{{ url_for('actor.get_actor_info') }}?actor_id=moreButton{{ key }}">{{ value.name }}</a>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
@@ -544,6 +578,27 @@
     function showMore(self) {
         console.log(self.id);
         window.location.href = "{{ url_for('film.get_film_info') }}" + "?film_id=" + self.id;
+    }
+</script>
+<script>
+    function likeActors(self) {
+        jQuery.ajax({
+            //几个参数需要注意一下
+            type: "GET",//方法类型
+            async: false,
+            dataType: "json",//预期服务器返回的数据类型
+            url: "{{ url_for('account.like_actors') }}" + "?actor_id=" + self.id,//url
+            success: function (data) {
+                if (data.type === 'like') {
+                    $('#' + self.id).attr('style', 'color: red');
+                } else if (data.type === 'unlike') {
+                    $('#' + self.id).attr('style', 'color: white');
+                }
+            },
+            error: function () {
+                alert("异常！");
+            }
+        });
     }
 </script>
 </body>

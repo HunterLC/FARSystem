@@ -181,254 +181,331 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <div class="card card-default">
-                    <div class="card-header">
-                        <h3 class="card-title">信息填写 （<span style="color: #921925">*</span>项为强制匹配）</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title">信息填写 （<span style="color: #921925">*</span>项为强制匹配）</h3>
 
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                    class="fas fa-minus"></i></button>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-minus"></i></button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>拍摄电影的主要类型</label>
+                                            <select id="filmTypeSelect" class="form-control select2"
+                                                    style="width: 100%;">
+                                                <option value="type_feature" selected="selected">剧情</option>
+                                                <option value="type_romance">爱情</option>
+                                                <option value="type_action">动作</option>
+                                                <option value="type_science">科幻</option>
+                                                <option value="type_adventure">冒险</option>
+                                                <option value="type_suspense">悬疑</option>
+                                                <option value="type_comedy">喜剧</option>
+                                                <option value="type_thriller">惊悚</option>
+                                                <option value="type_biography">传记</option>
+                                                <option value="type_cartoon">动画</option>
+                                                <option value="type_family">家庭</option>
+                                                <option value="type_fantasy">奇幻</option>
+                                                <option value="type_sowordsmen">武侠</option>
+                                                <option value="type_disaster">灾难</option>
+                                                <option value="type_dance">歌舞</option>
+                                                <option value="type_history">历史</option>
+                                                <option value="type_music">音乐</option>
+                                                <option value="type_short">短片</option>
+                                                <option value="type_children">儿童</option>
+                                                <option value="type_costume">古装</option>
+                                                <option value="type_horror">恐怖</option>
+                                                <option value="type_blue">情色</option>
+                                                <option value="type_samesex">同性</option>
+                                                <option value="type_opera">戏曲</option>
+                                                <option value="type_crime">犯罪</option>
+                                                <option value="type_war">战争</option>
+                                                <option value="type_western">西部</option>
+                                                <option value="type_sport">运动</option>
+                                                <option value="type_reality">真人秀</option>
+                                                <option value="type_documentary">纪录片</option>
+                                                <option value="type_talkshow">脱口秀</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>性別 <span style="color: #921925">*</span></label>
+                                            <select id="genderSelect" class="form-control select2"
+                                                    style="width: 100%;height: 100px">
+                                                <option value="" selected="selected">任意</option>
+                                                <option value="男">男</option>
+                                                <option value="女">女</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>年齡段</label>
+                                            <select id="ageSelect" class="form-control select2"
+                                                    style="width: 100%;height: 100px">
+                                                <option value="after_90s" selected="selected">90后</option>
+                                                <option value="after_80s">80后</option>
+                                                <option value="after_70s">70后</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>地域</label>
+                                            <select id="areaSelect" class="form-control select2"
+                                                    style="width: 100%;height: 100px">
+                                                <option value="" selected="selected">任意</option>
+                                                <option value="north">北方</option>
+                                                <option value="south">南方</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>国际化</label>
+                                            <select id="internationalSelect" class="form-control select2"
+                                                    style="width: 100%;height: 100px">
+                                                <option value="" selected="selected">任意</option>
+                                                <option value="1">是</option>
+                                                <option value="0">否</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>多职业</label>
+                                            <select id="multiCareerSelect" class="form-control select2"
+                                                    style="width: 100%;height: 100px">
+                                                <option value="" selected="selected">任意</option>
+                                                <option value="1">是</option>
+                                                <option value="0">否</option>
+                                            </select>
+
+                                        </div>
+                                        <!-- /.form-group -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>演员星座</label>
+                                            <select id="horoscopeSelect" class="form-control select2"
+                                                    style="width: 100%;height: 100px">
+                                                <option value="" selected="selected">任意</option>
+                                                <option value="type_1">白羊座</option>
+                                                <option value="type_2">金牛座</option>
+                                                <option value="type_3">双子座</option>
+                                                <option value="type_4">巨蟹座</option>
+                                                <option value="type_5">狮子座</option>
+                                                <option value="type_6">处女座</option>
+                                                <option value="type_7">天秤座</option>
+                                                <option value="type_8">天蝎座</option>
+                                                <option value="type_9">射手座</option>
+                                                <option value="type_10">摩羯座</option>
+                                                <option value="type_11">水瓶座</option>
+                                                <option value="type_12">双鱼座</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>更看重演员的平均星率等级</label>
+                                            <select id="starRateSelect" class="form-control select2"
+                                                    style="width: 100%;height: 100px">
+                                                <option value="" selected="selected">不关心</option>
+                                                <option value="actor_film_avg_five_star">五星率</option>
+                                                <option value="actor_film_avg_four_star">四星率</option>
+                                                <option value="actor_film_avg_three_star">三星率</option>
+                                                <option value="actor_film_avg_two_star">两星率</option>
+                                                <option value="actor_film_avg_one_star">一星率</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>平均豆瓣评分</label>
+                                            <input id="range_avg_score" type="text" name="range_5" value="">
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>总电影部数</label>
+                                            <input id="range_total_films" type="text" name="range_6" value="">
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>总获奖次数</label>
+                                            <input id="range_total_awards" type="text" name="range_7" value="">
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>平均评论条数</label>
+                                            <input id="range_avg_comments" type="text" name="range_8" value="">
+
+                                        </div>
+
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer" style="display: block;">
+                                <a class="btn btn-sm btn-primary" onclick="doRecommend();">
+                                    <i class="fas" style="color:white;font-size: small">开始推荐</i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body" style="display: block;">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>拍摄电影的主要类型</label>
-                                    <select id="filmTypeSelect" class="form-control select2" style="width: 100%;">
-                                        <option value="type_feature" selected="selected">剧情</option>
-                                        <option value="type_romance">爱情</option>
-                                        <option value="type_action">动作</option>
-                                        <option value="type_science">科幻</option>
-                                        <option value="type_adventure">冒险</option>
-                                        <option value="type_suspense">悬疑</option>
-                                        <option value="type_comedy">喜剧</option>
-                                        <option value="type_thriller">惊悚</option>
-                                        <option value="type_biography">传记</option>
-                                        <option value="type_cartoon">动画</option>
-                                        <option value="type_family">家庭</option>
-                                        <option value="type_fantasy">奇幻</option>
-                                        <option value="type_sowordsmen">武侠</option>
-                                        <option value="type_disaster">灾难</option>
-                                        <option value="type_dance">歌舞</option>
-                                        <option value="type_history">历史</option>
-                                        <option value="type_music">音乐</option>
-                                        <option value="type_short">短片</option>
-                                        <option value="type_children">儿童</option>
-                                        <option value="type_costume">古装</option>
-                                        <option value="type_horror">恐怖</option>
-                                        <option value="type_blue">情色</option>
-                                        <option value="type_samesex">同性</option>
-                                        <option value="type_opera">戏曲</option>
-                                        <option value="type_crime">犯罪</option>
-                                        <option value="type_war">战争</option>
-                                        <option value="type_western">西部</option>
-                                        <option value="type_sport">运动</option>
-                                        <option value="type_reality">真人秀</option>
-                                        <option value="type_documentary">纪录片</option>
-                                        <option value="type_talkshow">脱口秀</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>性別 <span style="color: #921925">*</span></label>
-                                    <select id="genderSelect" class="form-control select2"
-                                            style="width: 100%;height: 100px">
-                                        <option value="" selected="selected">任意</option>
-                                        <option value="男">男</option>
-                                        <option value="女">女</option>
-                                    </select>
+                    <div class="col-md-6">
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title">推荐结果</h3>
 
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-minus"></i></button>
                                 </div>
-                                <div class="form-group">
-                                    <label>年齡段</label>
-                                    <select id="ageSelect" class="form-control select2"
-                                            style="width: 100%;height: 100px">
-                                        <option value="after_90s" selected="selected">90后</option>
-                                        <option value="after_80s">80后</option>
-                                        <option value="after_70s">70后</option>
-                                    </select>
-
-                                </div>
-                                <div class="form-group">
-                                    <label>地域</label>
-                                    <select id="areaSelect" class="form-control select2"
-                                            style="width: 100%;height: 100px">
-                                        <option value="" selected="selected">任意</option>
-                                        <option value="north">北方</option>
-                                        <option value="south">南方</option>
-                                    </select>
-
-                                </div>
-                                <div class="form-group">
-                                    <label>国际化</label>
-                                    <select id="internationalSelect" class="form-control select2"
-                                            style="width: 100%;height: 100px">
-                                        <option value="" selected="selected">任意</option>
-                                        <option value="1">是</option>
-                                        <option value="0">否</option>
-                                    </select>
-
-                                </div>
-                                <div class="form-group">
-                                    <label>多职业</label>
-                                    <select id="multiCareerSelect" class="form-control select2"
-                                            style="width: 100%;height: 100px">
-                                        <option value="" selected="selected">任意</option>
-                                        <option value="1">是</option>
-                                        <option value="0">否</option>
-                                    </select>
-
-                                </div>
-                                <!-- /.form-group -->
                             </div>
-                            <!-- /.col -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>演员星座</label>
-                                    <select id="horoscopeSelect" class="form-control select2"
-                                            style="width: 100%;height: 100px">
-                                        <option value="" selected="selected">任意</option>
-                                        <option value="type_1">白羊座</option>
-                                        <option value="type_2">金牛座</option>
-                                        <option value="type_3">双子座</option>
-                                        <option value="type_4">巨蟹座</option>
-                                        <option value="type_5">狮子座</option>
-                                        <option value="type_6">处女座</option>
-                                        <option value="type_7">天秤座</option>
-                                        <option value="type_8">天蝎座</option>
-                                        <option value="type_9">射手座</option>
-                                        <option value="type_10">摩羯座</option>
-                                        <option value="type_11">水瓶座</option>
-                                        <option value="type_12">双鱼座</option>
-                                    </select>
-
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img alt="Avatar" class="img-fluid img-rounded"
+                                             src="/static/image/actor/blank.png" id="avatar_1">
+                                        <div class="ribbon-wrapper">
+                                            <div class="ribbon bg-danger text-sm">
+                                                1
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <a id="actor_name_1"></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <img alt="Avatar" class="img-fluid img-rounded"
+                                             src="/static/image/actor/blank.png" id="avatar_2">
+                                        <div class="ribbon-wrapper">
+                                            <div class="ribbon bg-danger text-sm">
+                                                2
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <a id="actor_name_2"></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <img alt="Avatar" class="img-fluid img-rounded"
+                                             src="/static/image/actor/blank.png" id="avatar_3">
+                                        <div class="ribbon-wrapper">
+                                            <div class="ribbon bg-danger text-sm">
+                                                3
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <a id="actor_name_3"></a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>更看重演员的平均星率等级</label>
-                                    <select id="starRateSelect" class="form-control select2"
-                                            style="width: 100%;height: 100px">
-                                        <option value="" selected="selected">不关心</option>
-                                        <option value="actor_film_avg_five_star">五星率</option>
-                                        <option value="actor_film_avg_four_star">四星率</option>
-                                        <option value="actor_film_avg_three_star">三星率</option>
-                                        <option value="actor_film_avg_two_star">两星率</option>
-                                        <option value="actor_film_avg_one_star">一星率</option>
-                                    </select>
-
-                                </div>
-                                <div class="form-group">
-                                    <label>平均豆瓣评分</label>
-                                    <input id="range_avg_score" type="text" name="range_5" value="">
-
-                                </div>
-                                <div class="form-group">
-                                    <label>总电影部数</label>
-                                    <input id="range_total_films" type="text" name="range_6" value="">
-
-                                </div>
-                                <div class="form-group">
-                                    <label>总获奖次数</label>
-                                    <input id="range_total_awards" type="text" name="range_7" value="">
-
-                                </div>
-                                <div class="form-group">
-                                    <label>平均评论条数</label>
-                                    <input id="range_avg_comments" type="text" name="range_8" value="">
-
-                                </div>
+                            </div>
+                            <div class="card-footer" style="display: block;">
 
                             </div>
-                            <!-- /.col -->
+
                         </div>
-                        <!-- /.row -->
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer" style="display: block;">
-                        <a class="btn btn-sm btn-primary" onclick="doRecommend();">
-                            <i class="fas" style="color:white;font-size: small">开始推荐</i>
-                        </a>
-                        <br>
-                        推荐结果
-                        <br>
-                        猜你喜欢
-                        <br>
-                        <table class="table table-striped projects">
-                            <thead>
-                            <tr>
-                                <th style="width: 1%">
-                                    #
-                                </th>
-                                <th style="width: 10%">
-                                    姓名
-                                </th>
-                                <th style="width: 10%">
-                                    肖像
-                                </th>
-                                <th style="width: 25%">
-                                    职业
-                                </th>
-                                <th style="width: 20%" class="text-center">
-                                    平均电影评分
-                                </th>
-                                <th style="width: 20%" class="text-center">
-                                    平均电影评论
-                                </th>
-                                <th style="width: 20%" class="text-center">
-                                    操作选项
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for actor in Guess %}
-                                <tr>
-                                    <td>
-                                        {{ loop.index }}
-                                    </td>
-                                    <td>
-                                        <a>
-                                            {{ actor.actor_c_name }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <ul class="list-inline">
-                                            <li class="list-inline-item">
-                                                <img alt="Avatar" class="table-avatar"
-                                                     src="/static/image/actor/{{ actor.actor_img }}">
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <a>
-                                             {{ actor.actor_career }}
-                                        </a>
-                                    </td>
-                                    <td class="project-state">
-                                        <span class="badge badge-success" style="font-size: large">{{ actor.actor_avg_films_score }}</span>
-                                    </td>
-                                    <td class="project-state">
-                                        <span class="badge badge-success" style="font-size: large">{{ actor.actor_avg_comments_sum }}</span>
-                                    </td>
-                                    <td class="project-actions text-right">
-                                        <a id="moreButton{{ actor.actor_id }}" class="btn btn-sm btn-primary"
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title">猜你喜欢</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-minus"></i></button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <table class="table table-striped projects">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 1%">
+                                            #
+                                        </th>
+                                        <th style="width: 10%">
+                                            姓名
+                                        </th>
+                                        <th style="width: 10%">
+                                            肖像
+                                        </th>
+                                        <th style="width: 25%">
+                                            职业
+                                        </th>
+                                        <th style="width: 10%" class="text-center">
+                                            评分
+                                        </th>
+                                        <th style="width: 10%" class="text-center">
+                                            评论数
+                                        </th>
+                                        <th style="width: 15%" class="text-center">
+                                            选项
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for actor in Guess %}
+                                        <tr>
+                                            <td>
+                                                {{ loop.index }}
+                                            </td>
+                                            <td>
+                                                <a>
+                                                    {{ actor.actor_c_name }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+                                                        <img alt="Avatar" class="table-avatar"
+                                                             src="/static/image/actor/{{ actor.actor_img }}">
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <a>
+                                                    {{ actor.actor_career }}
+                                                </a>
+                                            </td>
+                                            <td class="project-state">
+                                                <span class="badge badge-success"
+                                                      style="font-size: large">{{ actor.actor_avg_films_score }}</span>
+                                            </td>
+                                            <td class="project-state">
+                                                <span class="badge badge-success"
+                                                      style="font-size: large">{{ actor.actor_avg_comments_sum }}</span>
+                                            </td>
+                                            <td class="project-actions text-right">
+                                                <a id="moreButton{{ actor.actor_id }}" class="btn btn-sm btn-primary"
                                                    onclick="showMore(this);">
-                                            <i class="fas fa-folder" style="color:white;font-size: small">
-                                                详细
-                                            </i>
+                                                    <i class="fas fa-folder" style="color:white;font-size: small">
+                                                        详细
+                                                    </i>
 
-                                        </a>
-                                        <a id="likeButton{{ actor.actor_id }}" class="btn btn-sm bg-teal"
-                                                       onclick="likeActors(this);">
-                                                        <i id="likeButton{{ actor.actor_id }}Color"
-                                                           class="fas fa-heart-broken"></i> 喜欢
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                                </a>
+                                                <a id="likeButton{{ actor.actor_id }}" class="btn btn-sm bg-teal"
+                                                   onclick="likeActors(this);">
+                                                    <i id="likeButton{{ actor.actor_id }}Color"
+                                                       class="fas fa-heart-broken"></i> 喜欢
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer" style="display: block;">
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+
                 <!-- /.card -->
             </div><!-- /.container-fluid -->
         </section>
@@ -541,7 +618,19 @@
             dataType: "json",//预期服务器返回的数据类型
             url: "{{ url_for('recommend.recommend_actor') }}" + "?filmTypeSelect=" + filmTypeSelect + "&genderSelect=" + genderSelect + "&ageSelect=" + ageSelect + "&areaSelect=" + areaSelect + "&internationalSelect=" + internationalSelect + "&multiCareerSelect=" + multiCareerSelect + "&horoscopeSelect=" + horoscopeSelect + "&starRateSelect=" + starRateSelect + "&range_avg_score=" + range_avg_score + "&range_total_films=" + range_total_films + "&range_total_awards=" + range_total_awards + "&range_avg_comments=" + range_avg_comments,//url
             success: function (data) {
-
+                console.log(data)
+                let i = 1;
+                for (var key in data) {
+                    for (var key_1 in data[key]) {
+                        var id_1 = 'avatar_' + i;
+                        var id_2 = 'actor_name_' + i;
+                        var id_3 = "{{ url_for('actor.get_actor_info') }}" + "?actor_id=moreButton" + key_1;
+                        document.getElementById(id_1).src = "/static/image/actor/" + data[key][key_1].img;
+                        document.getElementById(id_2).innerHTML = data[key][key_1].name;
+                        document.getElementById(id_2).href = id_3;
+                        i++;
+                    }
+                }
             },
             error: function () {
                 alert("异常！");
@@ -564,9 +653,9 @@
             dataType: "json",//预期服务器返回的数据类型
             url: "{{ url_for('account.like_actors') }}" + "?actor_id=" + self.id,//url
             success: function (data) {
-                if(data.type==='like'){
-                    $('#'+self.id).attr('class','btn btn-sm bg-red');
-                    $('#'+self.id+'Color').attr('class', 'fas fa-heart');
+                if (data.type === 'like') {
+                    $('#' + self.id).attr('class', 'btn btn-sm bg-red');
+                    $('#' + self.id + 'Color').attr('class', 'fas fa-heart');
                 }
             },
             error: function () {
