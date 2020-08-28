@@ -35,7 +35,7 @@
                 <a href="{{ url_for('actor.start') }}" class="nav-link">首页</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">联系人</a>
+                <a href="{{ url_for('setting.start') }}" class="nav-link">设置</a>
             </li>
         </ul>
 
@@ -104,11 +104,14 @@
         <div class="sidebar">
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
+                <div class="image col-md-3">
                     <img src="{{ Session.userimage }}" class="img-circle elevation-2" alt="User Image">
                 </div>
-                <div class="info">
+                <div class="info col-md-5">
                     <a href="#" class="d-block">{{ Session.username }}</a>
+                </div>
+                <div class="info col-md-4 text-right">
+                    <a href="{{ url_for('account.logout') }}" class="d-block" style="font-size: small">退出登录</a>
                 </div>
             </div>
 
@@ -122,7 +125,7 @@
                         <a class="nav-link active">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
-                                功能菜单
+                                信息查看
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -143,10 +146,18 @@
                     </li>
                     <li class="nav-item">
                         <a href="{{ url_for('recommend.start') }}" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
+                            <i class="nav-icon fas fa-star"></i>
                             <p>
                                 演员推荐
                                 <span class="right badge badge-danger">Hot</span>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('setting.start') }}" class="nav-link">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <p>
+                                设置
                             </p>
                         </a>
                     </li>

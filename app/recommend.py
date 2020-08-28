@@ -1,9 +1,9 @@
-from math import sqrt
-
+import random
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import Normalizer, MinMaxScaler
 from scipy.linalg import norm
+from math import sqrt
 
 
 class Recommend:
@@ -375,9 +375,17 @@ class Recommend:
         else:
             # 当前用户没有喜欢任何演员
             print('当前用户没有喜欢任何演员')
-
-
-
+            # 随机生成 top_k_actor 个演员的id用作推荐
+            random_id = []
+            while (len(random_id) < self.top_k_actor):
+                x = random.randint(0, len(self.df_id)-1)
+                if x not in random_id:
+                    random_id.append(x)
+            item_score = {}
+            for item in random_id:
+                string_id = str(self.df_id[item])
+                item_score[string_id] = 1
+            return item_score
 
 
     def cal_user_similarity(self):

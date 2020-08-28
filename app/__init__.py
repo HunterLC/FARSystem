@@ -8,6 +8,7 @@ from app.views.account import account_blue
 from app.views.actor import actor_blue
 from app.views.film import film_blue
 from app.views.recommend import recommend_blue
+from app.views.setting import setting_blue
 
 
 def init_app():
@@ -24,5 +25,6 @@ def init_app():
     app.register_blueprint(film_blue, url_prefix='/film')
     app.register_blueprint(account_blue, url_prefix='/account')
     app.register_blueprint(recommend_blue, url_prefix='/recommend')
+    app.register_blueprint(setting_blue, url_prefix='/setting')
 
     return app
