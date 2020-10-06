@@ -3,14 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="151a542b-8a0f-4e7f-ae18-6d2f7d10a785" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/recommend.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/recommend.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/actorinfo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/actorinfo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/film.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/film.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/filminfo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/filminfo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/recommend.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/recommend.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/start.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/start.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -306,6 +298,11 @@
       <workItem from="1598517633789" duration="139000" />
       <workItem from="1598517903870" duration="4566000" />
       <workItem from="1598595228124" duration="10840000" />
+      <workItem from="1599028247037" duration="1252000" />
+      <workItem from="1599964288287" duration="861000" />
+      <workItem from="1599977600998" duration="6457000" />
+      <workItem from="1600914159332" duration="2368000" />
+      <workItem from="1601997688703" duration="99000" />
     </task>
     <servers />
   </component>
@@ -325,22 +322,22 @@
       <screen x="0" y="30" width="1536" height="834" />
     </state>
     <state x="548" y="203" key="FileChooserDialogImpl/0.30.1536.834@0.30.1536.834" timestamp="1594275557748" />
-    <state width="1493" height="301" key="GridCell.Tab.0.bottom" timestamp="1598606247062">
+    <state width="1493" height="189" key="GridCell.Tab.0.bottom" timestamp="1600916530679">
       <screen x="0" y="30" width="1536" height="834" />
     </state>
-    <state width="1493" height="301" key="GridCell.Tab.0.bottom/0.30.1536.834@0.30.1536.834" timestamp="1598606247062" />
-    <state width="1493" height="301" key="GridCell.Tab.0.center" timestamp="1598606247062">
+    <state width="1493" height="189" key="GridCell.Tab.0.bottom/0.30.1536.834@0.30.1536.834" timestamp="1600916530679" />
+    <state width="1493" height="189" key="GridCell.Tab.0.center" timestamp="1600916530679">
       <screen x="0" y="30" width="1536" height="834" />
     </state>
-    <state width="1493" height="301" key="GridCell.Tab.0.center/0.30.1536.834@0.30.1536.834" timestamp="1598606247062" />
-    <state width="1493" height="301" key="GridCell.Tab.0.left" timestamp="1598606247062">
+    <state width="1493" height="189" key="GridCell.Tab.0.center/0.30.1536.834@0.30.1536.834" timestamp="1600916530679" />
+    <state width="1493" height="189" key="GridCell.Tab.0.left" timestamp="1600916530679">
       <screen x="0" y="30" width="1536" height="834" />
     </state>
-    <state width="1493" height="301" key="GridCell.Tab.0.left/0.30.1536.834@0.30.1536.834" timestamp="1598606247062" />
-    <state width="1493" height="301" key="GridCell.Tab.0.right" timestamp="1598606247062">
+    <state width="1493" height="189" key="GridCell.Tab.0.left/0.30.1536.834@0.30.1536.834" timestamp="1600916530679" />
+    <state width="1493" height="189" key="GridCell.Tab.0.right" timestamp="1600916530679">
       <screen x="0" y="30" width="1536" height="834" />
     </state>
-    <state width="1493" height="301" key="GridCell.Tab.0.right/0.30.1536.834@0.30.1536.834" timestamp="1598606247062" />
+    <state width="1493" height="189" key="GridCell.Tab.0.right/0.30.1536.834@0.30.1536.834" timestamp="1600916530679" />
     <state width="1493" height="265" key="GridCell.Tab.1.bottom" timestamp="1595083341429">
       <screen x="0" y="30" width="1536" height="834" />
     </state>
@@ -369,7 +366,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FARSystem$apriori.coverage" NAME="apriori Coverage Results" MODIFIED="1596443275519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
     <SUITE FILE_PATH="coverage/FARSystem$Flask__run_py___1_.coverage" NAME="Flask (run.py) (1) Coverage Results" MODIFIED="1595297072079" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/FARSystem$FARSystem.coverage" NAME="FARSystem Coverage Results" MODIFIED="1598606048148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FARSystem$FARSystem.coverage" NAME="FARSystem Coverage Results" MODIFIED="1600995884005" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/FARSystem$spider.coverage" NAME="spider Coverage Results" MODIFIED="1594713861688" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/FARSystem$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1594799379242" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/FARSystem$Flask__run_py_.coverage" NAME="Flask (run.py) Coverage Results" MODIFIED="1595140478398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
